@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="RegessionSuite" verbose="10">
+	<parameter name="platform" value="android_kodak_nokia_6" />
+	<parameter name="server" value="production" />
+	<parameter name="username" value="qa_automation_hk_1" />
+	<parameter name="password" value="123123Aa" />
+	<!-- Cam 1 -->
+	<parameter name="comport" value="/dev/ttyAutomation" />
+	<!-- Cam 2 -->
+	<parameter name="comport1" value="/dev/ttyUSB1" />
+	<!-- Wifi 1 -->
+	<parameter name="wifiname" value="cinatic automation hotspot" />
+	<parameter name="wifipassword" value="123123Aa" />
+	<!-- Wifi 2 -->
+	<parameter name="wepwifiname" value="EBN automation WEP" />
+	<parameter name="wepwifipassword" value="12341234Aa" />
+
+	<listeners>
+<!-- 		<listener class-name="org.uncommons.reportng.HTMLReporter" /> -->
+		<!-- <listener -->
+		<!-- class-name="org.uncommons.reportng.JUnitXMLReporter" /> -->
+		<listener
+			class-name="com.cinatic.report.KodakCustomizedHTMLReporter" />
+		<listener class-name="com.cinatic.report.ExcelReportExporter" />
+	</listeners>
+
+	<test name="Release Checklist">
+		<packages>
+			<package name="android.kodak.testcases.checklist">
+			</package>
+		</packages>
+	</test>
+
+	<test name="Bug regression">
+		<packages>
+			<package name="android.kodak.testcases.bugs"></package>
+		</packages>
+	</test>
+
+	<test name="Preparation for next run tomorrow">
+		<packages>
+			<package name="android.kodak.testcases.AfterAllTests"></package>
+		</packages>
+	</test>
+
+</suite> 

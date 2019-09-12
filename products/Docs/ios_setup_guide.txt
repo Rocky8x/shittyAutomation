@@ -1,0 +1,7 @@
+
+
+
+Notes:
+	1. Sometime WebdriverAgent auto remove from app, there are two ways for reinstall
+		1.1 Install from xcode
+		1.2 Re-run a test case, appium will reinstall WebdriverAgent, 

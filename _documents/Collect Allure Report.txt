@@ -1,0 +1,13 @@
+rmdir /s /q "%WORKSPACE%\allure-results"
+rmdir /s /q "%WORKSPACE%\allure-report"
+xcopy /y "%WORKSPACE%\..\TM_001_SignUp\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_002_Login\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_003_Setup\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_004_TalkBack\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_005_MuteSound\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_006_CaptureImage\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_007_RecordVideo\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_008_PlayMelody\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_009_Detail\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_010_Setting\allure-results" "%WORKSPACE%\allure-results" /i
+"%JENKINS_HOME%\tools\ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation\allure2\bin\allure.bat" generate "%WORKSPACE%\allure-results" -c -o "%WORKSPACE%\allure-report"

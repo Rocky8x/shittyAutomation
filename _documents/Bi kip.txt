@@ -1,0 +1,176 @@
+Staging-h2o
+nvconf set1 server.api staging-h2o.hubble.in
+nvconf set1 server.stun staging-h2o-stun.hubble.in
+
+nvconf set1 server.api cs.hubble.in
+nvconf set1 server.stun stun.hubble.in
+
+server.analytics.url=https://api.hubble.in;;
+server.api=staging-h2o.hubble.in;;
+server.json.clips=http://staging-h2o-upload1.hubble.in/v1/uploads/clip.json;;
+server.json.image=https://staging-h2o-upload1.hubble.in/v1/uploads/image.json;;
+server.json.log=http://staging-h2o-upload1.hubble.in/v1/uploads/log.json;;
+server.json.snap=https://staging-h2o-upload1.hubble.in/v1/uploads/snap.json;;
+server.ntp=ntp.hubble.in;;
+server.p2p.monitor=relay-monitor.hubble.in;;
+server.ping=ping.hubble.in;;
+server.stun=staging-h2o-stun.hubble.in;;
+server.stun.port=3478;;
+server.upload.ftp=staging-upload-h2o.hubble.in;;
+server.upload.ftp.pass=upload@s3;;
+server.upload.ftp.user=ftpuser;;
+
+mount -o remount,rw /usr/local
+cd /usr/local
+mv system.conf system.conf.org
+lrz <send attached file system.staging.conf here>
+mv system.staging.conf system.conf
+reboot
+
+WinSCP
+Server: 
+192.168.3.92 nxcdev/nxcomm2015
+118.69.130.83 nxcomm/nxcomm2009
+FW path: /data/samba/nfs/va92/firmware/release
+/data/samba/nfs/ait6366/firmware/0877
+http://192.168.193.1:8080/fwupgrade.html
+http://192.168.193.1:8080/cgi-bin/logdownload.cgi
+
+Git: 
+
+
+http://118.69.130.83:8081/
+
+
+Jira: 
+https://monitoreverywhere.atlassian.net/wiki/dosearchsite.action?queryString=get_attribute
+
+
+Firmware_release:
+https://monitoreverywhere.atlassian.net/wiki/display/CFD/Firmware+Release+Notes
+
+UDID: 010085000AE2103282SYAGSQRM, LDtMa1ZB1LLsmiPo
+01008258635628E2E2NNLJJSSO
+
+AppBlade: qa@hubblevn.com/12345678a
+
+Hubble account: qa.cvision/Test123!
+
+Check UDID http://ota.hubble.in/ota1/1854_patch/udid.txt
+ota.hubble.in/ota1/1855_patch/history.txt
+
+Check server: http://healthcheck.hubble.in/staging-cn.html
+
+Upload UDID: https://console.hubble.in/#/
+prod-hubblehome/Qwerty123
+
+Check OTA: http://releases.hubblevn.com/otastatus1.html
+
+Check P2P lib version: RMC Version 01_31, StreamMgr
+
+cvision_guest/hubblehome20160815@
+
+cvision-tester22 HT2 yearly
+cvision-tester21 HT1 yearl
+http://releases.hubblevn.com/category/pu/667pu/y
+http://releases.hubblevn.com/2015/05/21/turbo-writer-application-on-nuvoton-platform/
+33336666Aa
+
+Disable root: 
+1. mount -o rw,remount /dev/mtdblock2 /
+2. vi inittab
+
+HC200:
+/etc/inittab
+
+[12:10:09 PM] hu_Ngan Tran: 16. Account google :
+nxcomm.tester1@gmail.com/13579135nxcomm
+[12:10:16 PM] hu_Ngan Tran: 18. iCloud account
+nxcomm.tester1@gmail.com/13579Nxcomm
+
+Get log by upload to FTP server:
+get all log ->logcreate.sh -> no tao log tai /mnt/cache
+
+vao /mnt/cache danh lenh ben duoi
+
+ ftpput -u aa -p aa -P 21 113.161.80.193 logE209E2183501000810540A.t
+ar.gz logE209E2183501000810540A.tar.gz
+
+sau do len fpt server -> ftp://aa@113.161.80.193/ login voi user name pass ben duoi
+
+account FTP
+user : aa
+pass : aa
+ip : 113.161.80.193
+port : 21
+ftp://aa@113.161.80.193/
+
+
+AWS frame:
+https://us-east-2.console.aws.amazon.com/console/home?region=us-east-2#
+simplimonitor/hung.chu/Qatest123!@#
+
+
+Uno:
+https://app.zeplin.io/login.html
+hoangha_123/Test123!
+
+https://monitoreverywhere.atlassian.net/wiki/download/attachments/159581645/HubbleHome_2.2.7.apk?version=1&modificationDate=1496666630201&cacheVersion=1&api=v2
+
+https://monitoreverywhere.atlassian.net/wiki/spaces/CP/pages/165544223/FW+Automation+testing+from+PC+application+convention
+
+Halo
+https://monitoreverywhere.atlassian.net/wiki/spaces/CFD/pages/181502291/automation+document
+
+Jenkins script:
+item = Jenkins.instance.getItemByFullName("UAT_Camera/Test_LiveStream_1854_OS")
+item.builds.each() { build ->
+  build.delete()
+}
+item.updateNextBuildNumber(1)
+
+item = Jenkins.instance.getItemByFullName("OS/Test_LiveStream_HC200_OS_PS")
+item.builds.findAll { it.number >= 413 && it.number <= 1513 }.each { it.delete() }
+item.updateNextBuildNumber(98)
+
+jmeter -n -t ../Hubble.jmx -l "%WORKSPACE%\report.csv" -R Auma-PC,Auto-PC
+
+Batch command:
+-window: command
+mvn test -DsuiteXmlFile=AUT_LIVESTREAM_UNO\sandbox\Test_LiveStream_ConnectingToOnline_halo.xml -DsuiteOutput="%WORKSPACE%" -DsuiteDevice=android_note_S_uno -DsuiteUsername=qatest22 -DsuitePassword=VQatest123 -DsuiteUdid=010945000AE22FFFF9TPJGSAIO
+
+-mac: shell
+cd ~/Repo/Hubble
+$MVN_HOME/mvn test -DsuiteXmlFile=UATTestSuiteIOS/Test_LiveStream_HC200.xml -DsuiteOutput="$WORKSPACE"
+
+Upgrade Orbit By SD-CARD
+Rename 0080-x.y.z.fw.pkg to elektra_upgrade.7z and copy to root folder of SD-Card
+Press both On/Off and Reset buttons for 5 seconds and the same time
+Release Reset button and keep On/Off button for 20 seconds
+Waiting for both LEDs (Green and Red) are On, release On/Off button
+Wait until only Red LED is blinking (About 5 minutes) -> FW is upgraded successfully
+
+Collect Allure Result:
+rmdir /s /q "%WORKSPACE%\allure-results"
+rmdir /s /q "%WORKSPACE%\allure-report"
+xcopy /y "%WORKSPACE%\..\TM_001_SignUp\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_002_Login_cases\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_003_Talk_Back\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_004_Play_Melody\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_005_Change_CameraSettingDetails\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_006_Change_CameraGeneralSettings\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_007_Change_CameraSensorSettings\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_008_CaptureImage\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_009_PanTilt\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_010_ApplicationSettings\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_011_Change_DoNotDisturb_settings\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_012_View_Stream\allure-results" "%WORKSPACE%\allure-results" /i
+xcopy /y "%WORKSPACE%\..\TM_013_Check_account_type\allure-results" "%WORKSPACE%\allure-results" /i
+"%JENKINS_HOME%\tools\ru.yandex.qatools.allure.jenkins.tools.AllureCommandlineInstallation\allure2\bin\allure.bat" generate "%WORKSPACE%\allure-results" -c -o "%WORKSPACE%\allure-report"
+
+Count camera:
+https://insight.hubble.in/dashboard/db/hubble-models-and-count?orgId=4
+cloud-ops / Hubble@1
+
+iOS commands:
+ps -ax|grep -i "iproxy"|grep -v grep|awk '{print "kill -9 " $1}'|sh

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="RegessionSuite" verbose="2">
+	<parameter name="platform" value="android_alecto_nokia_6" />
+	<parameter name="server" value="staging" />
+	<parameter name="username" value="qaauto000" />
+	<parameter name="password" value="123123Aa" />
+	<!-- Cam 1 -->
+	<parameter name="deviceid" value="000006E048AF002232QAMNGF" />
+	<parameter name="comport" value="/dev/ttyAutomation" />
+	<!-- Cam 2 -->
+	<parameter name="comport1" value="/dev/ttyUSB1" />
+	<parameter name="deviceid1" value="000007E048AF000592GNMNGF" />
+	<parameter name="devicessid1" value="KodakCam-F007000592" />
+	<!-- Wifi 1 -->
+	<parameter name="wifiname" value="cinatic automation hotspot" />
+	<parameter name="wifipassword" value="123123Aa" />
+	<!-- Wifi 1 -->
+	<parameter name="wepwifiname" value="Beisiusiu123" />
+	<parameter name="wepwifipassword" value="1357913501" />
+
+	<listeners>
+		<!-- <listener class-name="org.uncommons.reportng.HTMLReporter" /> -->
+		<listener
+			class-name="org.uncommons.reportng.JUnitXMLReporter" />
+		<listener
+			class-name="mobile.kodak.base.KodakCustomizedHTMLReporter" />
+		<!-- <listener class-name="com.cinatic.report.ExcelReportExporter" /> -->
+	</listeners>
+
+	<test name="Release Checklist">
+		<!-- <groups> -->
+		<!-- <run> -->
+		<!-- <include name="NoCam"/> -->
+		<!-- </run> -->
+		<!-- </groups> -->
+		<packages>
+			<package name="android.kodak.testcases.checklist">
+			</package>
+		</packages>
+
+	</test>
+
+	<!-- <test name="Bug regression"> -->
+	<!-- <packages> -->
+	<!-- <package name="android.kodak.testcases.bugs"></package> -->
+	<!-- </packages> -->
+	<!-- </test> -->
+
+	<!-- <test name="Preparation for next run tomorrow"> -->
+	<!-- <packages> -->
+	<!-- <package name="android.kodak.testcases.AfterAllTests"></package> -->
+	<!-- </packages> -->
+	<!-- </test> -->
+
+</suite> 

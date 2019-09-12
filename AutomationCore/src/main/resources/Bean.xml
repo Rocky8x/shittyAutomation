@@ -1,0 +1,49 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<context:annotation-config />			
+	<bean name="android_kodak_nokia_6" class="com.cinatic.driver.DriverSetting">
+		<property name="app" value="app-kodak-arm64-v8a-release.apk" />
+		<property name="platformName" value="Android" />
+		<property name="deviceUDID" value="D1TGAP9761600110" />
+		<property name="deviceName" value="Nokia_6" />
+		<property name="deviceVersion" value="8.1.0" />
+		<property name="remoteURL" value="http://127.0.0.1:4723/wd/hub" />	
+	</bean>
+		<bean name="android_kodak_c7" class="com.cinatic.driver.DriverSetting">
+		<property name="app" value="app-kodak-release.apk" />
+		<property name="platformName" value="Android" />
+		<property name="deviceUDID" value="e571d636" />
+		<property name="deviceName" value="Samsung C7" />
+		<property name="deviceVersion" value="8.1.0" />
+		<property name="remoteURL" value="http://127.0.0.1:4723/wd/hub" />	
+	</bean>
+	<bean name="iphone_6" class="com.cinatic.driver.DriverSetting">
+		<property name="app" value="kodak"/>
+		<property name="platformName" value="iOS" />
+		<property name="deviceVersion" value="12.1.2"/>
+		<property name="deviceName" value="iPhone 6" />
+		<property name="deviceUDID" value="7dd823eabee423934553fb2f67c7f6b14edb2be7" />
+		<property name="remoteURL" value="http://0.0.0.0:4723/wd/hub" />	
+		<property name="bundleId" value="com.perimetersafe.kodaksmarthome" />	
+	</bean>
+	<bean name="ipad" class="com.cinatic.driver.DriverSetting">
+		<property name="app" value="kodak"/>
+		<property name="platformName" value="iOS" />
+		<property name="deviceVersion" value="10.3"/>
+		<property name="deviceName" value="ipad 4" />
+		<property name="deviceUDID" value="9868fc25f0de66845cb345ba4d4872fb4b5bb5cb" />
+		<property name="remoteURL" value="http://0.0.0.0:4723/wd/hub" />	
+	</bean>
+		<bean name="android_alecto_nokia_6" class="com.cinatic.driver.DriverSetting">
+		<property name="app" value="app-alecto-release.apk" />
+		<property name="platformName" value="Android" />
+		<property name="deviceUDID" value="D1TGAP9761600110" />
+		<property name="deviceName" value="Nokia_6" />
+		<property name="deviceVersion" value="9" />
+		<property name="remoteURL" value="http://127.0.0.1:4723/wd/hub" />	
+	</bean>
+</beans>	
