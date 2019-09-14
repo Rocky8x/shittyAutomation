@@ -36,7 +36,7 @@ public class AirPurifierMqttStressTestFullCmd extends SendMqttCommandStressTestB
 				String	mqttMessage	= mqttHelper.output;
 				String	endtime		= StringHelper.getCurrentDateTime();
 				Long	duration	= StringHelper.getDuration(starttime, endtime);
-				TimeHelper.sleep(1000);
+				TimeHelper.sleep(Integer.parseInt(testParams.get("sleepTime")));
 
 				String result;
 				if (!mqttMessage.toString().isEmpty() && duration <= 1500) {
