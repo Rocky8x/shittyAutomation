@@ -1,12 +1,6 @@
-_resources
-target
+.gitignore
 test-output
+target
+.log
 logs
-.lck
-.DS_Store
 allure-results
-.-output
-auto.log
-dummy.*
-.classpath
-.settings
