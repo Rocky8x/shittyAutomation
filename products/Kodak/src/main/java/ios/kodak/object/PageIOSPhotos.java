@@ -43,7 +43,15 @@ public class PageIOSPhotos extends PageBase{
 		getDeletePhotoBtn().click();
 	}
 	
+	public static void closeAllowAccessPhoto() {
+		if(getOKButton().getWebElement() != null ) {
+			getOKButton().click();
+		}
+	}
+	
 	public static boolean verifyTodayImageExisted() {
 		return getTodayLable().getWebElement() != null;
 	}
+	
+	
 }

@@ -3,6 +3,7 @@ package com.motorolaintl.tests;
 import org.testng.annotations.Test;
 
 import com.cinatic.TimeHelper;
+import com.ebn.automation.core.WbDriverManager;
 import com.motorolaintl.pages.PageBase;
 import com.motorolaintl.pages.PageCart;
 import com.motorolaintl.pages.PageHome;
@@ -40,29 +41,21 @@ public class PAYMENT01_NavigationTest extends TestBaseMotoIntl {
 		// Go to shipping information page
 		pageCart.clickProceedCheckoutBtn();
 		// input information on shipping information page
-		pageShippingInformation.inputEmailAddress(email);
-		pageShippingInformation.inputFirstName(firstName);
-		pageShippingInformation.inputLastName(lastName);
-		pageShippingInformation.inputAddressStreet1(address1);
-		pageShippingInformation.inputAddressStreet2(address2);
-		pageShippingInformation.inputZipCode(zipCode);
-		pageShippingInformation.inputCity(city);
-		pageShippingInformation.selectRegion(region);
-		pageShippingInformation.inputTelephone(telephone);
+		pageShippingInformation.inputInformationUser(email, firstName, lastName, address1, address2, zipCode, city, region, telephone);
+
 		// Verify navigation to payment page
 		pageShippingInformation.clickContinueBtn();
-		TimeHelper.sleep(5000);
-
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
+		
 		// check click Logo Icon, navigate to cart page
 		pagePayment.clickLogoIconAndVerify();
 		pageShippingInformation.clickContinueBtn();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
 
 		pagePayment.clickCreditCardMethod();
-		pagePayment.inputCardNumber(creditCartNumber);
-		pagePayment.selectDateExpiration(date);
-		pagePayment.selectYearExpiration(year);
-		pagePayment.inputSecurityCode(securityCode);
+		pagePayment.inputInformationCard(creditCartNumber, date, year, securityCode);
 
 		// check click Continue, navigate to order confirmation page
 		pagePayment.clickContinueBtnAndVerify();

@@ -18,19 +18,19 @@ public class STREAM01_RemoteWifiAccess extends TestBaseAndroid{
 	String cameraName;
 
 	String secondWifi;
-	String secondwifiPw;
+	String secondwifiPw; 
 	String firstWifiname;
 	Terminal com;
+	
 //	@BeforeMethod
-//	@Parameters({"wepwifiname", "wepwifipassword" })
-	public void prepare(String wepwifiname, String wepwifipassword) throws Exception{
+	public void prepare() throws Exception{
 		ApiHelper  apiHelper = new ApiHelper();
 		apiHelper.userLogin(c_username, c_password);
 		apiHelper.getDevices();
 		cameraName = apiHelper.getDeviceByDeviceId(c_deviceid).getName();
 		firstWifiname = c_wifiname;
-		secondWifi = wepwifiname;
-		secondwifiPw = wepwifipassword;
+		secondWifi = testParams.get("wepwifiname");
+		secondwifiPw = testParams.get("wepwifipassword");
 		
 		com = new Terminal(c_comport);
 		

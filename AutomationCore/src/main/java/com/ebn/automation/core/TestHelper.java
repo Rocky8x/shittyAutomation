@@ -18,7 +18,7 @@ public class TestHelper {
 	 * @param context 
 	 * @return testParams
 	 */
-	public static Map<String, String> loadTestParam(ITestContext context) {
+	public static Map<String, String> loadTestParams(ITestContext context) {
 
 		// retrieve test parameter from command line input if there's any
 		// if not, use the parameter from testNG xml file

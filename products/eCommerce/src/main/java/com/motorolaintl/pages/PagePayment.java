@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import com.cinatic.TimeHelper;
 import com.ebn.automation.core.WbElement;
 import com.ebn.automation.core.WbDriverManager;
 
@@ -23,16 +22,23 @@ public class PagePayment extends PageBase{
 	
 	public WbElement getCreditCardMethodRadio() {
 		String xpath = "//input[@title='Credit Card']/..";
+		WbDriverManager.waitElement(By.xpath(xpath));
 		return new WbElement(By.xpath(xpath),"Credit Card Method Radio");
 	}
 	
-	public WbElement getPayPalMethodRadio() {
+	public WbElement getPayPalMethodLabel() {
 		String xpath = "//input[@title = 'PayPal Express Checkout']/..";
+		return new WbElement(By.xpath(xpath),"Paypal Checkout Method Radio");
+	}
+	
+	public WbElement getPayPalMethodRadio() {
+		String xpath = "//input[@title = 'PayPal Express Checkout']";
 		return new WbElement(By.xpath(xpath),"Paypal Checkout Method Radio");
 	}
 	
 	public WbElement getCreditCardNumberTbx() {
 		String id = "paypal_direct_cc_number";
+		WbDriverManager.waitElement(By.id(id));
 		return new WbElement(By.id(id),"Credit Card Number Text box");
 	}
 
@@ -53,6 +59,7 @@ public class PagePayment extends PageBase{
 	
 	public WbElement getContinueBtn() {
 		String xpath = "//*[@id='payment-buttons-container']/button";
+		WbDriverManager.waitElement(By.xpath(xpath));
 		return new WbElement(By.xpath(xpath),"Continue Button");
 	}
 	
@@ -129,6 +136,11 @@ public class PagePayment extends PageBase{
 		getCreditCardMethodRadio().clickByJavaScripts();
 	}
 	
+	public void clickPayPalPaymentMethod() {
+		getPayPalMethodRadio().clickByJavaScripts();
+	}
+	
+	
 	public void inputCardNumber(String number) {
 		getCreditCardNumberTbx().sendKeys(number);
 	}
@@ -152,8 +164,9 @@ public class PagePayment extends PageBase{
 	public void clickLogoIconAndVerify() {
 		clickLogoIcon();
 		WbDriverManager.waitForPageLoad();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(5000);
 		PageCart pageCart = new PageCart();
+		pageCart.getShoppingCartTitle().isDisplayed();
 		pageCart.verifyUrl();
 		WbDriverManager.backPreviousPage();
 	}
@@ -161,8 +174,9 @@ public class PagePayment extends PageBase{
 	public void clickContinueBtnAndVerify() {
 		clickContinueBtn();
 		WbDriverManager.waitForPageLoad();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(5000);
 		PageOrderConfirmation pageOrderConfirmation = new PageOrderConfirmation();
+		pageOrderConfirmation.getPlaceOrderBtn().isDisplayed();
 		pageOrderConfirmation.verifyUrl();
 		WbDriverManager.backPreviousPage();
 	}
@@ -237,5 +251,24 @@ public class PagePayment extends PageBase{
 		String xpath = "//select[@id='billing:region_id']//option[text()='"+state+"']";
 		WbElement option = new WbElement(By.xpath(xpath));
 		option.click();
+	}
+	
+	public void inputInformationCard(String creditCartNumber, String date, String year, String securityCode) {
+		inputCardNumber(creditCartNumber);
+		selectDateExpiration(date);
+		selectYearExpiration(year);
+		inputSecurityCode(securityCode);
+	}
+	
+	public void inputInformationShipping(String fullNameShipping , String telephoneShipping, String company, String address1Shipping
+			, String address2Shipping, String zipCode, String cityShipping, String regionShipping) {
+		inputFullNameTbx(fullNameShipping);
+		inputPhoneNumberTbx(telephoneShipping);
+		inputCompanyTbx(company);
+		inputAddres1Tbx(address1Shipping);
+		inputAddres2Tbx(address2Shipping);
+		inputZipCodeTbx(zipCode);
+		inputCityTbx(cityShipping);
+		setStateDropBox(regionShipping);
 	}
 }

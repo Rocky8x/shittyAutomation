@@ -109,12 +109,11 @@ public class SetupCamera extends StressTestBaseAndroid{
 		System.out.println(fullPath);
 
 		String errorCode = "";
-		String deviceLog = "";
 
 		TerminalHelper.exportLogCatLucy(driverSetting.getDeviceUDID(), fullPath);
 		TerminalHelper.clearLogCat(driverSetting.getDeviceUDID());
 
-		int code = db.doInsertSetupData(c_device, setup_duration, start_setup, end_setup, c_platform, errorCode, fileUrl,
+		db.doInsertSetupData(c_device, setup_duration, start_setup, end_setup, driverSetting.getDeviceName(), errorCode, fileUrl,
 				c_username + "/" + c_password, "SETUP PERFORMANCE");
 		start_setup="";
 		end_setup="";

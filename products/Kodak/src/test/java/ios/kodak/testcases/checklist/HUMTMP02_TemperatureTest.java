@@ -3,10 +3,12 @@ package ios.kodak.testcases.checklist;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.ApiHelper;
 import com.cinatic.StringHelper;
+import com.cinatic.TimeHelper;
 import com.cinatic.log.Log;
 import com.cinatic.object.Device;
 import com.cinatic.object.Terminal;
@@ -27,15 +29,19 @@ public class HUMTMP02_TemperatureTest extends TestBaseIOS{
 	Device device;
 
 	@BeforeMethod
-	public void precondition() throws SerialPortException {
+	@Parameters({"comport1", "deviceid1"})
+	public void precondition(String comport1, String deviceid1) throws SerialPortException {
 		api = new ApiHelper();
 		api.userLogin(c_username, c_password);
 		api.getDevices();
 		device = api.getDeviceByDeviceId(c_deviceid);
 		terminal = new Terminal(c_comport);
+		
+//		device = api.getDeviceByDeviceId(deviceid1);		
+//		terminal = new Terminal(c_comport);
 	}
 
-	@Test(priority = 21, description = "Verify temperature (C and F) will show according phone setting")
+	@Test(priority = 50, description = "Verify temperature (C and F) will show according phone setting")
 	public void verifyTemperatureSetup() throws SerialPortException {
 
 //		 Check and sign in
@@ -60,6 +66,7 @@ public class HUMTMP02_TemperatureTest extends TestBaseIOS{
 		PageDashboard.openDeviceSetting(device.getName());
 		PageDeviceSettings.gotoCameraSettingDetail();
 		PageDeviceSettings.enableTemperatureSetting();
+		TimeHelper.sleep(2000);
 		Assert.assertTrue(PageDeviceSettings.verifyTemperatureUnit("°F"), "Temperature unit should display with Fahrenheit.");
 
 		// Setting temperature with Celsius unit

@@ -14,15 +14,12 @@ public class AirPurifierMqttStressTestPowerState extends SendMqttCommandTestBase
 	String	commands[]	= {	"power_state_set&value=0",
 							"power_state_set&value=1" };
 	int		loop		= 5;
-	int		gap;
 
 	public AirPurifierMqttStressTestPowerState() {
 
 		tenantClass							= TenantObjects.AirPurifier.class;
 		htmlMqttCommandSendReportTemplate	= "../Docs" + File.separatorChar + "Templates"
 				+ File.separatorChar + "ap_mqtt_command_result_template.html";
-		
-		gap = Integer.parseInt(testParams.get("timeGap"));
 	}
 
 	@Test
@@ -35,7 +32,7 @@ public class AirPurifierMqttStressTestPowerState extends SendMqttCommandTestBase
 				String	mqttMessage	= mqttHelper.output;
 				String	endtime		= StringHelper.getCurrentDateTime();
 				Long	duration	= StringHelper.getDuration(starttime, endtime);
-				TimeHelper.sleep(gap * 1000);
+				TimeHelper.sleep(Integer.parseInt(testParams.get("timeGap")) * 1000);
 
 				String	result;
 				String	expectedMsg	= "&power_state_set: 0";

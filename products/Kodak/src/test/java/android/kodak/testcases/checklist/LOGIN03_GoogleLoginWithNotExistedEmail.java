@@ -5,8 +5,6 @@ import static org.testng.Assert.assertTrue;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.cinatic.StringHelper;
-
 import android.kodak.object.PageBase;
 import android.kodak.object.PageGetStart;
 import android.kodak.object.PageLogin;
@@ -19,8 +17,6 @@ public class LOGIN03_GoogleLoginWithNotExistedEmail extends TestBaseAndroid{
 	public void loginWithGoogleAccountNotExisted() {
 		String gmailAccount = "autoqatest01@gmail.com";
 		String gmailPassword = "Cinatic123";
-		String username = StringHelper.randomString("qaauto_", 10).toLowerCase();
-		String email = username + "@restmail.net";
 		
 		PageGetStart.goToSigninPage();
 		PageLogin.loginWithGoogleAccount(gmailAccount, gmailPassword);

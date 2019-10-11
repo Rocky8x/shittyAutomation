@@ -24,6 +24,8 @@ private Terminal terminal;
 	
 	@Parameters({"deviceid1", "devicessid1", "comport1", "wepwifiname", "wepwifipassword"})
 	
+	
+	
 	@BeforeClass
 	public void setup(String deviceid1, String devicessid1, String comport1, String wepwifiname, String wepwifipassword) throws SerialPortException{
 		this.deviceid1 = deviceid1;
@@ -31,25 +33,28 @@ private Terminal terminal;
 		this.comport1 = comport1;
 		this.wepwifiname = wepwifiname;
 		this.wepwifipassword = wepwifipassword;
-		terminal = new Terminal(comport1);
+		terminal = new Terminal(c_comport);
 	}
 	
 	
-	@Test(priority = 74, description = "Verify that user can setup camera with wep router successful")
+	@Test(priority = 991, description = "Verify that user can setup camera with wep router successful")
 	public void setupCameraWithWEPRouter() throws SerialPortException{
 		String secureType = "wep";
 		
 		PageGetStart.checkAndSignin(c_username, c_password);
 		terminal.sendCommand("pair", "start_pairing_mode", 10);
 		PageDashboard.clickAddNewCamera();
-		PageSetup.selectCameraImageByModelName(Device.getModelNameByUuid(deviceid1));
+		PageSetup.selectCameraImageByModelName("C520");
 		PageSetup.clickProceedAnyway();
+		TimeHelper.sleep(2000);
 		PageSetup.clickOnContinueSettupButton();
+		TimeHelper.sleep(2000);
 		PageSetup.clickOnContinueSettupButton();
+		TimeHelper.sleep(2000);
 		PageSetup.clickGotoSettingsButton();
 		PageIOSSetting.clickWifiSettings();
 		TimeHelper.sleep(20000);
-		PageIOSSetting.clickOnWifiName(devicessid1);
+		PageIOSSetting.clickOnWifiName(c_devicessid);
 		TimeHelper.sleep(20000);
 		PageIOSSetting.backToKodakApp();
 		TimeHelper.sleep(10000);

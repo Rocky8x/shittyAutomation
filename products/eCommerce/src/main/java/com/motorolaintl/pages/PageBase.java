@@ -5,7 +5,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -28,6 +27,10 @@ public class PageBase extends PageBaseCommon {
 	public final String urlTwitterHomePage = "https://twitter.com/MotorolaUS";
 	public final String urlPayPal = "https://www.paypal.com/";
 
+	public final String urlEbuyNowHomePage = "https://ebuynow.com/";
+	public final String urlMotoralHomePage = "https://www.motorola.com/us/products/moto-mods";
+	public final String urlMotoralPrivacyPolicyPage = "http://www.motorola.com/us/consumers/about-motorola-us/About_Motorola-Legal-Privacy_Policy/About_Motorola-Legal-Privacy_Policy.html";
+	
 	public PageBase() {
 		header = new GroupHeader();
 		footer = new GroupFooter();
@@ -40,7 +43,8 @@ public class PageBase extends PageBaseCommon {
 	}
 
 	public List<WbElement> getCountryFlagList() {
-		String xpath = "//i[@class='flag']/..";
+		String xpath = "//a[@class='store']";
+		WbDriverManager.waitElement(By.xpath(xpath));
 		return WbDriverManager.findElements(By.xpath(xpath));
 	}
 
@@ -62,11 +66,11 @@ public class PageBase extends PageBaseCommon {
 
 		Log.info("Verify footer content");
 		assertTrue(footer.getCopyrightLabel().hoverOnElement().isDisplayed());
-		TimeHelper.sleep(1000);
+//		TimeHelper.sleep(1000);
 		assertTrue(footer.getCountrySwitch().isDisplayed());
 		assertTrue(footer.getCountrySwitchLabel().isDisplayed());
 		assertTrue(footer.getInfomationLabel().isDisplayed());
-		assertTrue(footer.getMotoroloLogo().isDisplayed());
+		assertTrue(footer.getMotorolaLogo().isDisplayed());
 		assertTrue(footer.getPoweredByLabel().isDisplayed());
 		assertTrue(footer.getPrivacyPolicyLink().isDisplayed());
 		assertTrue(footer.getSocialLinkFacebook().isDisplayed());
@@ -184,6 +188,7 @@ public class PageBase extends PageBaseCommon {
 	}
 
 	public void verifyPageBasicContent() {
+		WbDriverManager.waitForPageLoad();
 		verifyHeaderFooter();
 	}
 
@@ -193,12 +198,17 @@ public class PageBase extends PageBaseCommon {
 	}
 
 	public List<WbElement> getProductDisplayPriceList() {
-		String xpath = "//*[@class='item-wrap  on-sale buyable' or @class ='item-wrap  buyable']";
+		String xpath = "//article[@class='item-wrap  on-sale buyable' or @class ='item-wrap  buyable']";
+		return WbDriverManager.findElements(By.xpath(xpath));
+	}
+	
+	public List<WbElement> getImageProductDisplayPriceList() {
+		String xpath = "//article[@class='item-wrap  on-sale buyable' or @class ='item-wrap  buyable']/a[@class='product-image']/span";
 		return WbDriverManager.findElements(By.xpath(xpath));
 	}
 
 	public List<WbElement> getProductNotDisplayPriceList() {
-		String xpath = "//*[@class='item-wrap  not-buyable']";
+		String xpath = "//article[@class='item-wrap  not-buyable']";
 		return WbDriverManager.findElements(By.xpath(xpath));
 	}
 
@@ -248,6 +258,7 @@ public class PageBase extends PageBaseCommon {
 			// get href product
 			WbElement element = getProductList().get(i);
 			String href = element.getAttribute("href");
+			element.scrollToElement();
 			element.click();
 			WbDriverManager.waitForPageLoad();
 			String currentUrl = WbDriverManager.getCurrentUrl();
@@ -260,10 +271,12 @@ public class PageBase extends PageBaseCommon {
 	}
 
 	public void changeCountryAndVerify() {
-		Log.info("Click all product and verify");
+		Log.info("Click flag country and verify");
+		header.getCountrySwitchMenu().scrollToElement();
+		header.getCountrySwitchMenu().click();
+		WbDriverManager.waitForPageLoad();
 		for (int i = 0; i < getCountryFlagList().size(); i++) {
-			header.getCountrySwitchMenu().click();
-			// get href product
+			//get href
 			TimeHelper.sleep(3000);
 			WbElement element = getCountryFlagList().get(i);
 			String href = element.getAttribute("href");
@@ -274,6 +287,8 @@ public class PageBase extends PageBaseCommon {
 			assertEquals(currentUrl, href);
 			// verify basic content
 			WbDriverManager.backPreviousPage();
+			WbDriverManager.waitForPageLoad();
+			header.getCountrySwitchMenu().click();
 		}
 	}
 
@@ -324,8 +339,9 @@ public class PageBase extends PageBaseCommon {
 	public void addProductToCart() {
 		Log.info("Add some product to Cart");
 		for (int i = 0; i < getProductDisplayPriceList().size(); i++) {
-			WbElement element = getProductDisplayPriceList().get(i);
-			element.clickByJavaScripts();
+			WbElement element = getImageProductDisplayPriceList().get(i);
+			element.scrollToElement();
+			element.click();
 			WbDriverManager.waitForPageLoad();
 			PageProductDetail pageProductDetail = new PageProductDetail();
 			pageProductDetail.addProductToCart();
@@ -357,7 +373,8 @@ public class PageBase extends PageBaseCommon {
 		for (int i = 0; i < (getParentPageSubMenuList().size() - 1); i++) {
 			WbElement ele = getParentPageSubMenuList().get(i);
 			ele.click();
-			TimeHelper.sleep(3000);
+//			TimeHelper.sleep(3000);
+			WbDriverManager.waitForPageLoad();
 			assertEquals(WbDriverManager.getCurrentUrl(), subPath.get(i));
 			WbDriverManager.backPreviousPage();
 		}
@@ -389,6 +406,11 @@ public class PageBase extends PageBaseCommon {
 		PageShippingInformation pageShippingInformation = new PageShippingInformation();
 		pageShippingInformation.verifyUrl();
 		WbDriverManager.backPreviousPage();
+		
+		//handle running on Firefox
+		if(WbDriverManager.getCurrentUrl().contains("#shipping")) {
+			WbDriverManager.backPreviousPage();
+		}
 	}
 	
 	public void navigateCheckouPaypalPageAndVerify() {
@@ -403,8 +425,55 @@ public class PageBase extends PageBaseCommon {
 	public void navigateCartAndVerify() {
 		navigateCartPage();
 		PageCart pageCart = new PageCart();
+		//Check title and url 
+		pageCart.getShoppingCartTitle().isDisplayed();
 		pageCart.verifyUrl();
 		WbDriverManager.backPreviousPage();
+	}
+	
+	public void verifyLinkOnPoweredPopUp() {
+		footer.getPoweredByLabel().click();
+		WbDriverManager.waitForPageLoad();
+		//Check link visit Ebuynow
+		String hrefVisitEbuyNow = footer.getVisitEbuyNowOnPoweredByPopUp().getAttribute("href");
+		assertEquals(hrefVisitEbuyNow, urlEbuyNowHomePage);
+		
+		//Check link goto Motorola
+		String hrefMotorolaPage = footer.getGotoMotorolaOnPoweredByPopUp().getAttribute("href");
+		assertEquals(hrefMotorolaPage, urlMotoralHomePage);
+		
+		//Check link Motorola Privacy Policy
+		String hrefMotoralPrivacyPolicyPage = footer.getMotorolaPrivacyPolicyOnPoweredByPopUp().getAttribute("href");
+		assertEquals(hrefMotoralPrivacyPolicyPage, urlMotoralPrivacyPolicyPage);
+		
+		//verify link Privacy Policy
+		footer.getPrivacyPolicyOnPoweredByPopUp().click();
+		PagePrivacyPolicy pagePrivacyPolicy = new PagePrivacyPolicy();
+		WbDriverManager.waitForPageLoad();
+		pagePrivacyPolicy.verifyUrl();
+		WbDriverManager.backPreviousPage();
+		
+	}
+	
+	public void changeCountryFooterAndVerify() {
+		Log.info("Click flag country at footer and verify");
+		footer.getCountrySwitch().scrollToElement();
+		footer.getCountrySwitch().click();
+		WbDriverManager.waitForPageLoad();
+		for (int i = 0; i < getCountryFlagList().size(); i++) {
+			//get href
+			WbElement element = getCountryFlagList().get(i);
+			String href = element.getAttribute("href");
+			element.click();
+			WbDriverManager.waitForPageLoad();
+			String currentUrl = WbDriverManager.getCurrentUrl();
+			// verify url
+			assertEquals(currentUrl, href);
+			// verify basic content
+			WbDriverManager.backPreviousPage();
+			WbDriverManager.waitForPageLoad();
+			footer.getCountrySwitch().click();
+		}
 	}
 
 }

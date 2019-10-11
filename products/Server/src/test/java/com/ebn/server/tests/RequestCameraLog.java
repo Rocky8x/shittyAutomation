@@ -1,46 +1,79 @@
 package com.ebn.server.tests;
 
-import java.util.ArrayList;
+import java.util.Map;
 
-import org.testng.annotations.DataProvider;
+import org.testng.ITestContext;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import com.cinatic.ApiHelper;
 import com.cinatic.ApiHelperConfig;
+import com.cinatic.TimeHelper;
 import com.cinatic.config.TenantObjects;
+import com.cinatic.log.Log;
 import com.cinatic.object.Device;
+import com.ebn.automation.core.TestHelper;
 
 public class RequestCameraLog {
 
-	Class<?>	tenant	= TenantObjects.Kodak.class;
-	String		server	= "production";
+	Class<?> tenant = TenantObjects.Kodak.class;
 
-	@DataProvider
-	public Object[][] testData() {
+	Map<String, String>	testParam;
+	ApiHelper			api;
+	Device				device;
+	int					requestCount	= 0;
+	long				elappedTime		= 0;
 
-		return new Object[][] {	{	"support.hk",
-									"12345678Rr" },
-								{	"support.eu",
-									"12345678Rr" },
-								{	"support.us",
-									"12345678Rr" } };
+	@BeforeSuite
+	public void prepare(ITestContext context) throws Exception {
+
+		testParam = TestHelper.loadTestParams(context);
+		ApiHelperConfig.configServer(tenant, testParam.get("server"), testParam.get("username"));
+		api = new ApiHelper();
+		api.userLogin(testParam.get("username"), testParam.get("password"));
+
+		api.getDevices();
+		device = api.getDeviceByDeviceId(testParam.get("cameraId"));
 	}
 
-	@Test(dataProvider = "testData")
-	public void getCameraLog(String... data) throws Exception {
+	@Test
+	public void getCameraLogInDuration() throws Exception {
 
-		String	user	= data[0];
-		String	passwd	= data[1];
-		ApiHelperConfig.configServer(tenant, server, user);
-		ApiHelper api = new ApiHelper();
-		api.userLogin(user, passwd);
-		api.getDevices();
-		ArrayList<Device> devices = api.helper().getDevices();
-
-		for (Device device : devices) {
-
-			if (device.isOnline())
-				api.helper().downloadCloudLogFile(device.getDevice_id());
+		long	startTime	= System.currentTimeMillis();
+		long	currentTime	= 0;
+		long	runDuration	= Long.parseLong(testParam.get("testTime")) * 60 * 1000;
+		if (device.isOnline()) {
+			while (true) {
+				currentTime	= System.currentTimeMillis();
+				elappedTime	= currentTime - startTime;
+				try {
+					api.helper().downloadCloudLogFile(device.getDevice_id());
+					requestCount++;
+				} catch (Exception e) {
+					Log.info(e.getMessage());
+					api.getDevices();
+					Device d = api.getDeviceByDeviceId(device.getDevice_id());
+					if (!d.isOnline())
+						throw new Exception("Camera is offline after running for: "
+								+ TimeHelper.milisec2String((int) elappedTime));
+					else
+						throw new Exception("No response from device");
+				}
+				if (elappedTime >= runDuration)
+					return;
+				TimeHelper.sleep(Integer.parseInt(testParam.get("gap")));
+			}
+		} else {
+			throw new Exception("Camera is offline");
 		}
+	}
+
+	@AfterSuite
+	public void echoJenkinsDescription() {
+
+		// this is for jenkins set build description plugin
+		Log.info("+ Summary:", requestCount + "", "request(s) in",
+				TimeHelper.milisec2String((int) elappedTime));
 	}
 }

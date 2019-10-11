@@ -12,6 +12,7 @@ import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.cinatic.log.Log;
 
@@ -93,6 +94,8 @@ public class WbElement implements WebElement {
 
 		Log.info("Clicking : " + description);
 		try {
+			scrollToElement();
+			waitClickable();
 			element.click();
 		} catch (Exception e) {
 			Log.fatal("Cannot click");
@@ -186,7 +189,7 @@ public class WbElement implements WebElement {
 
 	public WbElement scrollToElement() {
 
-		((JavascriptExecutor) WbDriverManager.getDriver())
+		((JavascriptExecutor) WbDriverManager.getDriver().driver())
 				.executeScript("arguments[0].scrollIntoView(true);", element);
 		return this;
 	}
@@ -194,17 +197,26 @@ public class WbElement implements WebElement {
 	public WebElement hoverOnElement() {
 
 		Log.info("Hovering to: " + description);
+		scrollToElement();
 		Actions a = new Actions(WbDriverManager.getDriver());
 		a.moveToElement(element);
 		a.build().perform();
 		return this;
 	}
 
-	public WebElement clickByJavaScripts() {
-
+	public WbElement clickByJavaScripts() {
+		Log.info("Click element by JavascriptExecutor Class: " + element.toString());
 		JavascriptExecutor executor = (JavascriptExecutor) WbDriverManager.getDriver();
 		executor.executeScript("arguments[0].click();", element);
 		return this;
+	}
+	
+	public WbElement clickByActionClass() {
+		Log.info("Click element by Actions Class: " + element.toString());
+		Actions actions = new Actions(WbDriverManager.getDriver());
+	      actions.moveToElement(element).click().perform();
+	      actions.release();
+		return this;	
 	}
 
 	public String getHref() {
@@ -224,5 +236,11 @@ public class WbElement implements WebElement {
 		we.element		= element.findElement(by);
 		we.description	= desc;
 		return we;
+	}
+	
+	public WbElement waitClickable() {
+
+		WbDriverManager.getDriver().waits().until(ExpectedConditions.elementToBeClickable(element));
+		return this;
 	}
 }

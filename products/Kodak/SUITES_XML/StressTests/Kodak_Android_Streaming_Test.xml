@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="RegessionSuite" verbose="1">
-	<parameter name="platform" value="android_kodak_nokia_6" />
+	<parameter name="app" value="app-kodak-arm64-v8a-release.apk" />
+	<parameter name="platformName" value="Android" />
+	<parameter name="deviceUDID" value="e571d636" />
+	<parameter name="deviceName" value="C7" />
+
 	<parameter name="server" value="production" />
 	<parameter name="username" value="qa_automation_hk_1" />
 	<parameter name="password" value="123123Aa" />
-	<parameter name="comport" value="/dev/ttyUSB1"/>
+	<parameter name="comport" value="/dev/ttyUSB1" />
 	<parameter name="wifiname" value="cinatic automation hotspot" />
 	<parameter name="wifipassword" value="123123Aa" />
 

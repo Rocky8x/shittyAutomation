@@ -91,7 +91,6 @@ public class Streaming extends StressTestBaseAndroid {
 		System.out.println(fullPath);
 
 		String errorCode = "";
-		String deviceLog = "";
 
 		// deviceLog = TerminalHelper.getLogCat(driverSetting.getDeviceUDID(),
 		// "errorCode", c_device.getDevice_id());
@@ -120,7 +119,7 @@ public class Streaming extends StressTestBaseAndroid {
 			}
 		}
 
-		db.doInsertStreamData(c_device, device_mode, streaming_duration, startStreaming, TestConstant.appVersion, c_platform, errorCode, fileUrl, c_username + "/" + c_password,
+		db.doInsertStreamData(c_device, device_mode, streaming_duration, startStreaming, TestConstant.appVersion, driverSetting.getDeviceName(), errorCode, fileUrl, c_username + "/" + c_password,
 				"STREAMING PERFORMANCE");
 
 		device_mode = "";

@@ -2,7 +2,6 @@ package android.kodak.testcases.AfterAllTests;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.ApiHelper;
@@ -22,11 +21,10 @@ public class EnableMd extends TestBaseAndroid{
 	String deviceid1="";
 	String deviceid2="";
 	
-	@Parameters({"comport1"})
 	@BeforeMethod
-	public void getCamerasNames(String comport1) throws Exception{
+	public void getCamerasNames() throws Exception{
 		Terminal cam1Term = new Terminal(c_comport);
-		Terminal cam2Term = new Terminal(comport1);
+		Terminal cam2Term = new Terminal(testParams.get("comport1"));
 
 		cam1Term.unlockCameraShell();		
 		cam2Term.unlockCameraShell();		

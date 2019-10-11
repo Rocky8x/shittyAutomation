@@ -54,9 +54,12 @@ public class MEDIA01_TakePhotos extends TestBaseIOS{
 		PageStreamView.clickTakePhotoButton();
 		TimeHelper.sleep(10000);
 		
+		
 		// Switch to Photos app and check image
 		PageBase.switchApp(PHOTOS_BUNDLE_ID, DriverManager.getDriver().getAppiumDriver());
 		TimeHelper.sleep(10000);
+		PageIOSPhotos.closeAllowAccessPhoto();
+		
 		Assert.assertTrue(PageIOSPhotos.verifyTodayImageExisted());
 	}
 }

@@ -78,7 +78,7 @@ public class PTZ01_PanTilt extends TestBaseAndroid {
 			PageDashboard.gotoHomeMenuPage();
 			PageHomeMenu.gotoHomeSetingPage();
 			boolean naturalPtz;
-			String naturalPtzOption = PageHomeSetting.getNaturalPtzSwitch().getAttribute("checked");
+			PageHomeSetting.getNaturalPtzSwitch().getAttribute("checked");
 
 			// natural PTZ on
 			PageHomeSetting.getNaturalPtzSwitch().setValue(true);

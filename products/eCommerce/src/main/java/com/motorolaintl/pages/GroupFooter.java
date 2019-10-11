@@ -5,8 +5,8 @@ import org.openqa.selenium.By;
 import com.ebn.automation.core.WbElement;
 
 public class GroupFooter {
-	public WbElement getMotoroloLogo() {
-		String xpath = "//div[@class='footer-container']//div[@class='footer-logo']/img";
+	public WbElement getMotorolaLogo() {
+		String xpath = "//div[@class='footer-container']//div[@class='footer-logo']";
 		return new WbElement(By.xpath(xpath), "Footer: Motorola image");
 	}
 
@@ -59,5 +59,25 @@ public class GroupFooter {
 		String xpath = "//a[contains(@class,'powered-by-toggle')]";
 		return new WbElement(By.xpath(xpath), "Footer: Powered by");
 	}
-
+	
+	public WbElement getPrivacyPolicyOnPoweredByPopUp() {
+		String xpath = "//div[@class='powered-by-content']//a[text()='Privacy Policy']";
+		return new WbElement(By.xpath(xpath), "Footer: Privacy Policy link on PoweredBy PopUp");
+	}
+	
+	public WbElement getVisitEbuyNowOnPoweredByPopUp() {
+		String xpath = "//div[@class='powered-by-content']//a[text()='Visit eBuyNow.com']";
+		return new WbElement(By.xpath(xpath), "Footer: Visit ebuynow link on PoweredBy PopUp");
+	}
+	
+	public WbElement getGotoMotorolaOnPoweredByPopUp() {
+		String xpath = "//div[@class='powered-by-content']//a[text()='Go to Motorola.com']";
+		return new WbElement(By.xpath(xpath), "Footer: Goto Motorola.com link on PoweredBy PopUp");
+	}
+	
+	public WbElement getMotorolaPrivacyPolicyOnPoweredByPopUp() {
+		String xpath = "//div[@class='powered-by-content']//a[contains(text(),'Go to Motorola.com Privacy Policy')]";
+		return new WbElement(By.xpath(xpath), "Footer: Motorola Privacy Policy link on PoweredBy PopUp");
+	}
+	
 }

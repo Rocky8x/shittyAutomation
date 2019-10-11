@@ -5,7 +5,6 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.object.Device;
@@ -29,10 +28,9 @@ public class PAIR03_SetupCameraWithSpecialCharWifi extends TestBaseAndroid {
 	    	{wifiname, wifiPwd, "WPA2"}
 	    };
 	}
-	@Parameters({"comport1"})
 	@BeforeMethod
-	public void openComPort(String comport1) throws Exception{
-		terminalCamera2= new Terminal(comport1);
+	public void openComPort() throws Exception{
+		terminalCamera2= new Terminal(testParams.get("comport1"));
 		terminalCamera2.sendCommand("shell 0 LAnXh7fr7yB3JJEtKqkFBxN3jrEPS4sN");
 		if (camera2SSID==null) {
 			String cameraId2 = terminalCamera2.getCameraUdid();

@@ -254,15 +254,11 @@ public class KodakRestMailHelper {
 
 	private String getGrantAccessSuccessMessage() {
 
-		String		locatorMsg	= "//div[@class='alert alert-success']/span[@class='ng-binding ng-scope']";
-		WebElement	verificationMessage;
-		try {
-			verificationMessage = WbDriverManager.getDriver().findElement(By.xpath(locatorMsg));
-		} catch (Exception e) {
-			WbDriverManager.getDriver().manage().deleteAllCookies();
-			WbDriverManager.getDriver().navigate().refresh();
-			verificationMessage = WbDriverManager.getDriver().findElement(By.xpath(locatorMsg));
-		}
+		String			locatorMsg	= "//div[@class='alert alert-success']/span[@class='ng-binding ng-scope']";
+		WebElement		verificationMessage;
+		WebDriverWait	wait		= new WebDriverWait(WbDriverManager.getDriver(), 40);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(locatorMsg)));
+		verificationMessage = WbDriverManager.getDriver().findElement(By.xpath(locatorMsg));
 		return verificationMessage.getText().trim();
 	}
 

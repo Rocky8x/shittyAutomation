@@ -2,7 +2,9 @@ package ios.kodak.testcases.checklist;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.ApiHelper;
@@ -22,13 +24,23 @@ public class OTA03_OTAByForceUpgrade extends TestBaseIOS{
 	ApiHelper api;
 	Device device;
 	
-	@BeforeMethod
-	public void setUp() throws SerialPortException {
-		terminal = new Terminal(c_comport);
+//	@BeforeMethod
+//	public void setUp() throws SerialPortException {
+//		terminal = new Terminal(c_comport);
+//		api = new ApiHelper();
+//		api.userLogin(c_username, c_password);
+//		api.getDevices();
+//		device = api.getDeviceByDeviceId(c_deviceid);
+//	}
+	@Parameters({"deviceid1", "devicessid1", "comport1"})
+	@BeforeClass
+	public void setup(String deviceid1, String devicessid1, String comport1) throws SerialPortException{
+		terminal = new Terminal(comport1);
 		api = new ApiHelper();
 		api.userLogin(c_username, c_password);
 		api.getDevices();
-		device = api.getDeviceByDeviceId(c_deviceid);
+		device = api.getDeviceByDeviceId(deviceid1);
+	
 	}
 	
 	@Test(priority = 70, description = "FW OTA manually by clicking via camera setting/detail/force upgrade")

@@ -3,7 +3,6 @@ package android.kodak.testcases.checklist;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.ApiHelper;
@@ -33,9 +32,8 @@ public class SETTING12_AlternativeSSID_UI_test extends TestBaseAndroid {
 		terminal = new Terminal(c_comport);
 	}
 
-	@Parameters({ "wepwifiname", "wepwifipassword" })
 	@Test(priority = 11)
-	public void alternativeSsidUiNFunctionTest(String wepwifiname, String wepwifipassword) throws Exception {
+	public void alternativeSsidUiNFunctionTest() throws Exception {
 		String altSSID = "";
 		PageDashboard.getCameraSettingButton(cameraName).click();
 
@@ -58,7 +56,7 @@ public class SETTING12_AlternativeSSID_UI_test extends TestBaseAndroid {
 		/* FUNCTIONAL verifying in firmware side */
 
 		// add a real SSID
-		changeAndCheckAltSsid(wepwifiname, wepwifipassword);
+		changeAndCheckAltSsid(testParams.get("wepwifiname"), testParams.get("wepwifipassword"));
 		DriverManager.getDriver().quit();
 		DriverManager.removeWebDriver();
 		LocalPC.disableHotspot();
@@ -71,11 +69,11 @@ public class SETTING12_AlternativeSSID_UI_test extends TestBaseAndroid {
 
 		DriverManager.createWebDriver(driverSetting);
 
-		boolean checkResult = terminal.sendCommand("config", "ROUTER_SSID : \\[c\\d+\\] \\'" + wepwifiname + "\\'", 5);
+		boolean checkResult = terminal.sendCommand("config", "ROUTER_SSID : \\[c\\d+\\] \\'" + testParams.get("wepwifiname") + "\\'", 5);
 		Assert.assertTrue(checkResult, "Camera did not change to Alternative SSID");
 
 		PageDashboard.openDeviceSetting(cameraName);
-		Assert.assertEquals(PageCameraSetting.getCurrentSsidTextbox().getText(), wepwifiname);
+		Assert.assertEquals(PageCameraSetting.getCurrentSsidTextbox().getText(), testParams.get("wepwifiname"));
 
 		// reboot camera. make sure it will connect back to primary ssid
 		terminal.sendCommand("reboot");

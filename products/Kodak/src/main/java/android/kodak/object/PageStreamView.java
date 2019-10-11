@@ -421,8 +421,6 @@ public class PageStreamView extends PageBase{
 			swipeDirection_right = "left";
 		}
 
-		PageStreamView cameraStreamView = new PageStreamView();
-
 		com.clearTeratermLog();
 		panTilt(swipeDirection_left);
 		assertTrue(com.getTeratermLog().contains("req=motor_left"),

@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 
-import com.cinatic.TimeHelper;
 import com.cinatic.log.Log;
 import com.ebn.automation.core.WbElement;
 import com.ebn.automation.core.WbDriverManager;
@@ -130,7 +129,8 @@ public class PageProductDetail extends PageBase {
 
 	public void addProductToCart() {
 		getAddToCartBtn().click();
-		TimeHelper.sleep(3000);
+//		TimeHelper.sleep(3000);
+		WbDriverManager.waitForPageLoad();
 	}
 	/**
 	 * 
@@ -160,6 +160,22 @@ public class PageProductDetail extends PageBase {
 	
 	public String getErrorMessage() {
 		return getErrorMessageTxt().getText();
+	}
+	
+	public void clickOutOfStockLabelAndVerify() {
+		String urlBefore = WbDriverManager.getCurrentUrl();
+		getOutOfStockStatus().click();
+		WbDriverManager.waitForPageLoad();
+		String urlAfter = WbDriverManager.getCurrentUrl();
+		assertEquals(urlAfter, urlBefore);
+	}
+	
+	public void addProductToCartAndVerify() {
+		
+		addProductToCart();
+		PageCart pageCart = new PageCart();
+		pageCart.getShoppingCartTitle().isDisplayed();
+		pageCart.verifyUrl();
 	}
 
 }

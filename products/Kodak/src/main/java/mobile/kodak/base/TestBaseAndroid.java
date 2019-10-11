@@ -1,6 +1,5 @@
 package mobile.kodak.base;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 import org.testng.ITestResult;
@@ -27,11 +26,16 @@ import jssc.SerialPortException;
 public class TestBaseAndroid extends TestBase {
 
 	@BeforeSuite
-	public void beforeSuiteAndroid() throws IOException {
+	public void beforeSuiteAndroid() throws Exception {
+
+		driverSetting.setPlatformName("Android");
+		driverSetting.setAppActivity("com.cinatic.demo2.activities.splash.SplashActivity");
 
 		cleanUpAppium();
 		unlockCameraShell();
-		if (!c_quickRun) {
+		if (!Boolean.parseBoolean(testParams.get("quickRun"))) {
+			// quickRun = true : don't enable DND and show debug info
+			// quickRun = false : force enable DND and show debug info
 			launchApp();
 			PageGetStart.checkAndSignin(c_username, c_password);
 			enableShowDebugInfo();
@@ -43,11 +47,13 @@ public class TestBaseAndroid extends TestBase {
 	@BeforeMethod
 	public void beforeMethodAndroid(Method method) throws Exception {
 
-		Log.info("====> Nodes: " + TerminalHelper.exeBashCommand("pgrep node").replace('\n', ' '));
+		launchApp();
+		Log.debug("====> Nodes' PID : "
+				+ TerminalHelper.exeBashCommand("pgrep node").replace('\n', ' '));
 
 		if (TestConstant.appVersion == null) {
-			TestConstant.appVersion = TerminalHelper
-					.adbGetAppVersion(driverSetting.getDeviceUDID());
+			TestConstant.appVersion = TerminalHelper.adbGetAppVersion(driverSetting.getDeviceUDID(),
+					driverSetting.getAppId());
 		}
 	}
 

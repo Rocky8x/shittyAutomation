@@ -7,7 +7,6 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.DatabaseHelper;
@@ -38,10 +37,9 @@ public class PlayMotionClipFromTimeLine extends StressTestBaseAndroid{
 	private String playSuccess;
 	DatabaseHelper db = new DatabaseHelper();
 
-	@Parameters ({"comport2"})
 	@BeforeSuite
-	public void prepare(String comport2) throws Exception {
-		Terminal terminalCam2 = new Terminal(comport2);
+	public void prepare() throws Exception {
+		Terminal terminalCam2 = new Terminal(testParams.get("comport1"));
 		cam1 = c_device;
 		cam2 = c_api.getDeviceByDeviceId(terminalCam2.getCameraUdid());
 	}
@@ -130,7 +128,7 @@ public class PlayMotionClipFromTimeLine extends StressTestBaseAndroid{
 		Log.info("Video play duration: " + durationVideoPlay);
 		Log.info("----------End Information------");
 		
-		db.doInsertVideoData(c_device, streamingMode, durationVideoPlay, timeClickPlaybutton, TestConstant.appVersion, c_platform, logMessage, fileUrl, c_username + "/" + c_password,
+		db.doInsertVideoData(c_device, streamingMode, durationVideoPlay, timeClickPlaybutton, TestConstant.appVersion, driverSetting.getDeviceName(), logMessage, fileUrl, c_username + "/" + c_password,
 				"PLAY MOTION CLIP PERFORMANCE");
 
 		resetInfo();

@@ -43,7 +43,7 @@ public class MqttTestBase {
 
 		DsuiteBuildUrl = System.getProperty("suiteBuildUrl");
 
-		testParams = TestHelper.loadTestParam(context);
+		testParams = TestHelper.loadTestParams(context);
 
 		// Config api server connection
 		ApiHelperConfig.configServer(tenantClass, testParams.get("region"),

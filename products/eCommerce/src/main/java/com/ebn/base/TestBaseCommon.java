@@ -95,7 +95,11 @@ public class TestBaseCommon {
 		Log.info("  | Result : " + status);
 		Log.info(result.getInstanceName());
 		System.out.println();
-		String screenshot = "test-output/html/" + result.getMethod().getMethodName() + ".png";
+		String testData = "";
+		if(result.getTestContext().getAttribute("testName") != null) {
+			testData = "_"+result.getTestContext().getAttribute("testName").toString();
+		}
+		String screenshot = "test-output/html/" +status+"_"+result.getInstanceName()+"_"+ testName+testData + ".png";
 		WbDriverManager.takeScreenShot(screenshot);
 	}
 }

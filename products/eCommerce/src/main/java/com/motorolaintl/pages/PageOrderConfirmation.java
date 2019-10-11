@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 
-import com.cinatic.TimeHelper;
 import com.cinatic.log.Log;
 import com.ebn.automation.core.WbElement;
 import com.ebn.automation.core.WbDriverManager;
@@ -92,7 +91,8 @@ public class PageOrderConfirmation extends PageBase{
 	
 	public WbElement getPlaceOrderBtn() {
 		String xpath = "//div[@id='review-buttons-container']/button[@class='button btn-checkout']";
-		return new WbElement(By.xpath(xpath));
+		WbDriverManager.waitElement(By.xpath(xpath));
+		return new WbElement(By.xpath(xpath),"Place Order Button");
 	}
 	
 	public void clickLogoIcon() {
@@ -102,8 +102,9 @@ public class PageOrderConfirmation extends PageBase{
 	public void clickLogoIconAndVerify() {
 		clickLogoIcon();
 		WbDriverManager.waitForPageLoad();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(5000);
 		PageCart pageCart = new PageCart();
+		pageCart.getShoppingCartTitle().isDisplayed();
 		pageCart.verifyUrl();
 		WbDriverManager.backPreviousPage();
 	}

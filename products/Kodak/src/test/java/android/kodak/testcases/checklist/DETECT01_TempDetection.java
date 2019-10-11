@@ -4,8 +4,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.cinatic.ApiHelperConfig;
 import com.cinatic.ApiHelper;
+import com.cinatic.ApiHelperConfig;
 import com.cinatic.MQTTHelper;
 import com.cinatic.TimeHelper;
 import com.cinatic.object.Device;
@@ -20,7 +20,7 @@ import mobile.kodak.base.TestBaseAndroid;
 public class DETECT01_TempDetection extends TestBaseAndroid {
 
 	Device				device;
-	Terminal			terminal;
+	Terminal			terminal;	
 	MQTTHelper			mqttHelperl;
 	MqttCommandResponse	mqttCommandResponse;
 
@@ -28,10 +28,6 @@ public class DETECT01_TempDetection extends TestBaseAndroid {
 	public void Precondition() throws Exception {
 
 		terminal = new Terminal(c_comport);
-	}
-
-	public void mqttPrepare() throws Exception {
-
 		ApiHelper api = new ApiHelper();
 		api.userLogin(c_username, c_password);
 		api.getDevices();
@@ -51,10 +47,8 @@ public class DETECT01_TempDetection extends TestBaseAndroid {
 		PageCameraSetting.enableTemperature();
 
 		// get temp detection setting via MQTT command
-		mqttPrepare();
 		mqttHelperl.sendCommand("get_caminfo");
 		mqttCommandResponse = new MqttCommandResponse(mqttHelperl.output);
-		String value = mqttCommandResponse.getAttribute("td");
 
 		TimeHelper.sleep(3 * 1000);
 		PageCameraSetting.disableTemperature();

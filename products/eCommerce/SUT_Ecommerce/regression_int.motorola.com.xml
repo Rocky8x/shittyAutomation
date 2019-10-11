@@ -8,7 +8,7 @@
 		<listener class-name="org.uncommons.reportng.HTMLReporter" />
 	</listeners>
 
-	<test name="Regression test Motorolachargers.com">
+	<test name="Regression test intl.motorola.com">
 		<packages>
 			<package name="com.motorolaintl.tests">
 			</package>

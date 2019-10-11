@@ -31,20 +31,21 @@ public class TimeHelper {
 
 	public static String milisec2String(int miliseconds) {
 
-		int hour = 0, min = 0, sec = 0, mili = 0;
-		if (miliseconds > 1000) {
+		int hour = 0, min = 0, sec = 0, mili = miliseconds;
+		if (miliseconds >= 1000) {
 			sec		= miliseconds / 1000;
 			mili	= miliseconds % 1000;
-		}
-		if (sec > 60) {
-			min	= sec / 60;
-			sec	= sec % 60;
-		}
-		if (min > 60) {
-			hour	= min / 60;
-			min		= min % 60;
-		}
 
+			if (sec > 60) {
+				min	= sec / 60;
+				sec	= sec % 60;
+
+				if (min > 60) {
+					hour	= min / 60;
+					min		= min % 60;
+				}
+			}
+		}
 		String[]	label	= {	"h",
 								"m",
 								"s",

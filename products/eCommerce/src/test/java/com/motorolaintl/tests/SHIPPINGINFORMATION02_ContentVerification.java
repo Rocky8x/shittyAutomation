@@ -1,7 +1,6 @@
 package com.motorolaintl.tests;
 
 import static org.testng.Assert.assertTrue;
-
 import org.testng.annotations.Test;
 import com.ebn.automation.core.WbDriverManager;
 import com.motorolaintl.pages.PageBase;

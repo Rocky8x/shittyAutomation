@@ -27,6 +27,12 @@ public class PageCart extends PageBase {
 		String xpath = "//button[@class='button btn-proceed-checkout btn-checkout']/span/span";
 		return new WbElement(By.xpath(xpath),"Proceed To Check Out Button");
 	}
+	
+	public WbElement getShoppingCartTitle() {
+		String xpath = "//h1[text()='Shopping Cart']";
+		WbDriverManager.waitElement(By.xpath(xpath));
+		return new WbElement(By.xpath(xpath),"Shopping Cart Title");
+	}
 
 	public WbElement getCheckoutPaypalBtn() {
 		String xpath = "//a[@class='btn btn-paypal-checkout']";
@@ -40,12 +46,12 @@ public class PageCart extends PageBase {
 	
 	public List<WbElement> getElementProductList() {
 		List<WbElement> productList = new ArrayList<>();
-		String xpath = "./td[@class='product-cart-info']/h2[@class='product-name']";
+		String xpath = "./td[@class='product-cart-info']/h2[@class='product-name']/a";
 		for (WbElement element : getProductList()) {
 			WbElement temp = element.findSubElement(By.xpath(xpath),"Name Product");
 			productList.add(temp);
 		}
-		return  productList;
+		return productList;
 	}
 
 	public List<String> getNameProductList() {
@@ -123,6 +129,11 @@ public class PageCart extends PageBase {
 		String xpath = "//a[@class='toggle' and contains(text(),'I have a promo code')]";
 		return new WbElement(By.xpath(xpath),"Link Promo Code Txt");
 	}
+	
+	public WbElement getSubmitPromoCodeBtn() {
+		String xpath = "//div[@class='input-box']//span[text()='Apply']";
+		return new WbElement(By.xpath(xpath),"Submit Promo Code Btn");
+	}
 
 	public WbElement getPriceSubTotal() {
 		String xpath = "//td[contains(text(),'Subtotal')]/..//span[@class='price']";
@@ -170,6 +181,12 @@ public class PageCart extends PageBase {
 		WbDriverManager.waitForPageLoad();
 		pageShippingInformation.verifyUrl();
 		WbDriverManager.backPreviousPage();
+		
+		//handle running for Firefox
+		String url = WbDriverManager.getCurrentUrl();
+		if(url.contains("#shipping")) {
+			WbDriverManager.backPreviousPage();
+		}
 	}
 
 	public void clickCheckoutPaypalBtnAndVerify() {
@@ -205,7 +222,7 @@ public class PageCart extends PageBase {
 	// Input value to quantity product box
 	/**
 	 * @param value : value to input Quantity product box
-	 * @param position : 0,1,2,.... position product
+	 * @param position : 0,1,2,.... position product on list
 	 */
 	public void inputQuantity(int value, int position) {
 		
@@ -213,13 +230,14 @@ public class PageCart extends PageBase {
 		WbElement ele = getQuantityProductBoxList().get(position);
 		ele.clear();
 		ele.sendKeys(String.valueOf(value));
+		getPriceAmountPayable().click();
 		WbDriverManager.waitForPageLoad();
 		TimeHelper.sleep(15000);
 	}
 	
 	// Trash product out of cart
 	/**
-	 * @param position : 0,1,2,.... position product
+	 * @param position : 0,1,2,.... position product on list
 	 */
 	public void trashProductOutOfCart(int position) {
 		
@@ -227,12 +245,13 @@ public class PageCart extends PageBase {
 		WbElement ele = getTrashProductBtnList().get(position);
 		ele.click();
 		WbDriverManager.acceptAlert();
+		TimeHelper.sleep(2000);
 	}
 	
-	// Trash product out of cart
+	// Convert price from string to double 
 	/**
-	 * @return FLoat price 
-	 * @param stringPrice : 0,1,2,.... position product
+	 * @return Double price 
+	 * @param stringPrice : 0,1,2,.... position product on list
 	 */
 	public Double convertPriceStringToDouble(String stringPrice) {
 		DecimalFormat df = new DecimalFormat("#.00");
@@ -253,6 +272,7 @@ public class PageCart extends PageBase {
 		getPromoCodeToggle().click();
 		WbDriverManager.waitForPageLoad();
 		getCouponTbx().sendKeys(promoteCode);
+		getSubmitPromoCodeBtn().click();
 	}
 	
 	public void addProductSuggestToCart() {
@@ -269,6 +289,20 @@ public class PageCart extends PageBase {
 		String currentURL = WbDriverManager.getCurrentUrl();
 		assertEquals(currentURL, href);
 		
+	}
+	
+	public void clickProductAndVerify() {
+		WbDriverManager.waitForPageLoad();
+		List<String> name = getNameProductList();
+		for(int i = 0 ; i < name.size(); i++) {
+			Log.info(Integer.toString(i));
+			getElementProductList().get(i).click();
+			PageProductDetail pageProductDetail = new PageProductDetail();
+			String nameProduct = pageProductDetail.getTitleProductName();
+			assertEquals(nameProduct, name.get(i));
+			WbDriverManager.backPreviousPage();
+			WbDriverManager.waitForPageLoad();
+		}
 	}
 
 

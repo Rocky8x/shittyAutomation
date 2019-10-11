@@ -3,8 +3,6 @@ package android.kodak.testcases.checklist;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.object.Device;
@@ -20,10 +18,8 @@ public class PAIR02_SetupCameraWithWepWifi extends TestBaseAndroid {
 	private Terminal terminalCamera2;
 	private String cameraSsid2;
 
-	@Parameters({"comport1"})
-	@BeforeMethod
-	public void openComPort(String comport1) throws Exception{
-		terminalCamera2= new Terminal(comport1);
+	public void openComPort() throws Exception{
+		terminalCamera2= new Terminal(testParams.get("comport1"));
 		terminalCamera2.sendCommand("shell 0 LAnXh7fr7yB3JJEtKqkFBxN3jrEPS4sN");
 		if (cameraSsid2==null) {
 			String cameraId2 = terminalCamera2.getCameraUdid();
@@ -31,9 +27,8 @@ public class PAIR02_SetupCameraWithWepWifi extends TestBaseAndroid {
 		}
 	}
 	
-	@Parameters({ "comport1", "wepwifiname", "wepwifipassword"})
 	@Test(priority = 10, description = "Verify that user can setup camera with special char SSID")
-	public void setupCameraWithWepWifi(String comport1, String wepwifiname, String wepwifipassword) throws SerialPortException {
+	public void setupCameraWithWepWifi() throws SerialPortException {
 	
 		PageGetStart.checkAndSignin(c_username, c_password);
 		
@@ -56,7 +51,7 @@ public class PAIR02_SetupCameraWithWepWifi extends TestBaseAndroid {
 			PageDashboard.getSSIDLabel(cameraSsid2).click();
 		}
 		// Config wifi for camera
-		PageDashboard.configWifiForCamera(wepwifiname, "WEP", wepwifipassword);
+		PageDashboard.configWifiForCamera(testParams.get("wepwifiname"), "WEP", testParams.get("wepwifipassword"));
 
 		if(PageDashboard.getMobileDataContinueButton().getWebElement()!=null) {
 			PageDashboard.getMobileDataContinueButton().click();

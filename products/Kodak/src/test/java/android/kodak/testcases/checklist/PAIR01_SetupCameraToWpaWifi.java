@@ -3,7 +3,6 @@ package android.kodak.testcases.checklist;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.object.Device;
@@ -58,9 +57,8 @@ public class PAIR01_SetupCameraToWpaWifi extends TestBaseAndroid {
 	}
 			
 	// pair the second camera in the test case above to the main wifi 
-	@Parameters({"comport1"})
 	@Test (priority=11, description="Re-setup the same camera to another SSID")
-	public void reSetupToAnotherWifi(String comport1) throws SerialPortException {
+	public void reSetupToAnotherWifi() throws SerialPortException {
 		
 		String deviceId1 = terminalCamera1.getCameraUdid();
 		String devicessid1 = Device.convertSsidByUuid(deviceId1);

@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import com.cinatic.ApiHelper;
 import com.cinatic.StringHelper;
 import com.cinatic.object.Device;
-import com.cinatic.object.MqttObject;
 
 import android.kodak.object.PageCameraSetting;
 import android.kodak.object.PageDashboard;
@@ -25,7 +24,6 @@ public class SETTING04_SendCameraLog extends TestBaseAndroid {
 		api.userLogin(c_username, c_password);
 		api.getDevices();
 		device = api.getDeviceByDeviceId(c_deviceid);
-		MqttObject o = api.registerApp();
 	}
 	
 	@Test(priority = 14, description = "Send camera log")

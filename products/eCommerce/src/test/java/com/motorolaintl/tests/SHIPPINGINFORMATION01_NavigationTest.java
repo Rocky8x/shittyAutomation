@@ -38,20 +38,14 @@ public class SHIPPINGINFORMATION01_NavigationTest extends TestBaseMotoIntl {
 		pageCart.clickProceedCheckoutBtn();
 		WbDriverManager.waitForPageLoad();
 		// input information
-		pageShippingInformation.inputEmailAddress(email);
-		pageShippingInformation.inputFirstName(firstName);
-		pageShippingInformation.inputLastName(lastName);
-		pageShippingInformation.inputAddressStreet1(address1);
-		pageShippingInformation.inputAddressStreet2(address2);
-		pageShippingInformation.inputZipCode(zipCode);
-		pageShippingInformation.inputCity(city);
-		pageShippingInformation.selectRegion(region);
-		pageShippingInformation.inputTelephone(telephone);
+		pageShippingInformation.inputInformationUser(email, firstName, lastName, address1, address2, zipCode, city,
+				region, telephone);
 
 		// Verify navigation to cart page
 		pageShippingInformation.clickLogoIconAndVerify();
 
 		// Verify navigation to payment page
+		WbDriverManager.waitForPageLoad();
 		pageShippingInformation.clickContinueBtnAndVerify();
 
 	}

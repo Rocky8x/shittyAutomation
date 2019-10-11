@@ -27,9 +27,9 @@ public class TM000_CheckUpdateApp extends TestBaseIOS{
 		PageDashboard.clickHomeButton();
 		
 		// Open TestFlight and check new version
-		driverSetting.setBundleId(testFlightBundleId);
+		driverSetting.setAppId(testFlightBundleId);
 		DriverManager.createWebDriver(driverSetting);
-		driverSetting.setBundleId(kodakBundleId);
+		driverSetting.setAppId(kodakBundleId);
 		boolean rs = PageTestFlight.updateKodakApp(currentVer);
 		String updatedVersion = PageDashboard.getCurrentAppVersion();
 		if(rs) {

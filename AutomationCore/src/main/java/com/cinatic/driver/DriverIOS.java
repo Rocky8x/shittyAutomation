@@ -23,7 +23,7 @@ public class DriverIOS extends DriverBase {
 			cap.setCapability("deviceName", driverSetting.getDeviceName());
 			cap.setCapability("platformVersion", driverSetting.getDeviceVersion());
 			cap.setCapability("rotatable", true);
-			cap.setCapability("bundleId", driverSetting.getBundleId());
+			cap.setCapability("bundleId", driverSetting.getAppId());
 			cap.setCapability("showIOSLog",true );
 			cap.setCapability("showXcodeLog", false);
 			cap.setCapability("udid", driverSetting.getDeviceUDID());

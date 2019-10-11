@@ -1,15 +1,13 @@
 package mobile.kodak.base;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 
 import com.cinatic.ApiHelperConfig;
 import com.cinatic.FileHelper;
@@ -21,42 +19,78 @@ import com.cinatic.driver.DriverSetting;
 import com.cinatic.log.Log;
 import com.cinatic.object.Device;
 import com.cinatic.object.Terminal;
+import com.ebn.automation.core.TestHelper;
 
 import android.kodak.object.PageBase;
 
 public class TestBase {
 
-	public static String	currentLoginUser	= "";
-	public static String	c_platform, c_server, c_deviceid, c_devicessid, c_comport, c_wifiname,
+	public static String currentLoginUser = "";
+
+	// Still using two ways to obtain test params, one is via static "c_" var (old
+	// way), the other is via static Map "testParams" (new way)
+	// the reason for using both method is for backward compatible with old test
+	// cases
+	// refactor all these tests will take lots of time, hence the current situation
+	// here.
+
+	// Using testParam map will be easier when add or remove test parameters:
+	// - from Jenkins: just add/remove java VM args "-DtestArg.[test param name]"
+	// - from xml suite file: add/remove <parameter> tag
+	// then use testParams.get("[test param name]") in java test class
+	//
+	public static String				c_server, c_deviceid, c_devicessid, c_comport, c_wifiname,
 			c_wifipassword, c_username, c_password;
-	public boolean			c_quickRun			= false; // set to true if you don't want to force
-														 // enable DND and show debug on the app
+	public static Map<String, String>	testParams;
+	/* ------------------------------------------------------------ */
 
 	public static DriverSetting driverSetting;
 
-	public static ApplicationContext	context;
-	public static Class<?>				tenant;
+	public static Class<?> tenant;
 
-	@Parameters({	"platform",
-					"server",
-					"username",
-					"password",
-					"deviceid",
-					"comport",
-					"wifiname",
-					"wifipassword",
-					"quickRun" })
 	@BeforeSuite
-	public void beforeSuite(String platform, String server, @Optional String username,
-			@Optional String password, @Optional String deviceid, String comport, String wifiname,
-			String wifipassword, @Optional String quickRun) throws Exception {
+	public void beforeSuite(ITestContext icontext) throws Exception {
 
-		loadBean();
-		loadParam(platform, server, username, password, deviceid, comport, wifiname, wifipassword,
-				quickRun);
-		driverSetting	= (DriverSetting) context.getBean(c_platform);
-		tenant			= TenantObjects.getTenantByAppName(driverSetting.getApp());
-		ApiHelperConfig.configServer(tenant, c_server, c_username);
+		testParams = TestHelper.loadTestParams(icontext);
+
+		PageBase.resetFlags();
+		String systemPath = StringHelper.getSystemPath();
+		try {
+			FileHelper.clearFolder(systemPath + "/html/");
+			FileHelper.clearFolder(systemPath + "/allure-results/");
+			FileHelper.deleteFiles((StringHelper.getSystemPath()), ".xlsx");
+		} catch (Exception e) {
+			Log.info(String.format("Got exception while clean up previous report: %s",
+					e.getMessage()));
+		}
+
+		c_server		= testParams.get("server");
+		c_username		= testParams.get("username");
+		c_password		= testParams.get("password");
+		c_comport		= testParams.get("comport");
+		c_wifiname		= testParams.get("wifiname");
+		c_wifipassword	= testParams.get("wifipassword");
+		if (testParams.get("deviceid") != null) {
+			c_deviceid = testParams.get("deviceid");
+		} else {
+			Terminal t = new Terminal(c_comport);
+			c_deviceid = t.getCameraUdid();
+			t.closePort();
+		}
+		c_devicessid = Device.convertSsidByUuid(c_deviceid);
+
+		driverSetting = new DriverSetting();
+		driverSetting.setApp(String.valueOf(testParams.get("app")));
+		driverSetting.setDeviceName(String.valueOf(testParams.get("deviceName")));
+		driverSetting.setDeviceUDID(String.valueOf(testParams.get("deviceUDID")));
+		driverSetting.setRemoteURL(String.valueOf(testParams.get("remoteURL")));
+
+		try {
+
+			driverSetting.setAppId("com.perimetersafe.kodaksmarthome");
+			tenant = TenantObjects.getTenantByAppName(driverSetting.getAppId());
+			ApiHelperConfig.configServer(tenant, c_server, c_username);
+		} catch (Exception e) {}
 	}
 
 	@BeforeMethod
@@ -64,7 +98,6 @@ public class TestBase {
 
 		Log.info(String.format("------ START: %s: %s ------",
 				method.getDeclaringClass().getSimpleName(), method.getName()));
-		launchApp();
 	}
 
 	@AfterMethod
@@ -98,34 +131,6 @@ public class TestBase {
 		Log.info(result.getInstanceName());
 	}
 
-	public void loadParam(String platform, String server, @Optional String username,
-			@Optional String password, String deviceid, String comport, String wifiname,
-			String wifipassword, @Optional String quickRun) throws Exception {
-
-		c_platform	= platform;
-		c_server	= server;
-		if (username != null) { c_username = username; }
-		if (password != null) { c_password = password; }
-
-		c_comport		= comport;
-		c_wifiname		= wifiname;
-		c_wifipassword	= wifipassword;
-		if (deviceid != null) {
-			c_deviceid = deviceid;
-		} else {
-			Terminal t = new Terminal(c_comport);
-			c_deviceid = t.getCameraUdid();
-			t.closePort();
-		}
-		c_devicessid = Device.convertSsidByUuid(c_deviceid);
-		if (System.getProperty("suitePlatform") != null) {
-			c_platform = System.getProperty("suitePlatform");
-		}
-
-		if (quickRun != null)
-			c_quickRun = Boolean.parseBoolean(quickRun);
-	}
-
 	public void cleanUpAppium() {
 
 		// kill all orphan Appium server
@@ -137,23 +142,11 @@ public class TestBase {
 		} catch (Exception e) {}
 	}
 
-	public void loadBean() {
-
-		PageBase.resetFlags();
-		context = new ClassPathXmlApplicationContext("Bean.xml");
-		String systemPath = StringHelper.getSystemPath();
-		try {
-			FileHelper.clearFolder(systemPath + "/html/");
-			FileHelper.clearFolder(systemPath + "/allure-results/");
-			FileHelper.deleteFiles((StringHelper.getSystemPath()), ".xlsx");
-		} catch (Exception e) {
-			Log.info(String.format("Got exception while clean up previous report: %s",
-					e.getMessage()));
-		}
-	}
-
 	protected void launchApp() {
 
+		// Do not call this function from within this class
+		// since driverSetting is not yet fully configured in this class
+		// there's more configuration need to be done in TestBaseAndroid and TestBaseIOS
 		DriverManager.createWebDriver(driverSetting);
 	}
 

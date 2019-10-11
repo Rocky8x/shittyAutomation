@@ -3,61 +3,37 @@ package com.ebn.automation.core;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 
 import com.cinatic.log.Log;
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class WbDriverManager {
 
-	static WebDriver driver;
+	private static Map<Long, WbDriver>	driverMap	= new ConcurrentHashMap<Long, WbDriver>();
 
-	public static WebDriver getDriver() {
+	public static synchronized void putDriver(WbDriver driver) {
 
-		return driver;
+		driverMap.put(Thread.currentThread().getId(), driver);
 	}
 
-	public static void setDriver(WebDriver driver) {
+	public static synchronized WbDriver getDriver() {
 
-		WbDriverManager.driver = driver;
+		return driverMap.get(Thread.currentThread().getId());
 	}
 
-	public static void newBrowser(String browser) {
+	public synchronized static void newBrowser(String browser) {
 
-// configDriverPath();
-
-		switch (browser.toLowerCase()) {
-		case "chrome":
-			Log.info("Starting new Chrome driver");
-			WebDriverManager.chromedriver().setup();
-			ChromeOptions options = new ChromeOptions();
-
-			options.addArguments("--disable-gpu");
-			options.addArguments("--disable-dev-shm-usage");
-			options.addArguments("--no-sandbox");
-			driver = new ChromeDriver(options);
-			break;
-		case "firefox":
-			Log.info("Starting new Firefox driver");
-			WebDriverManager.firefoxdriver().setup();
-			driver = new FirefoxDriver();
-			break;
-		default:
-			break;
-		}
+		putDriver(new WbDriver(browser));
 	}
 
 	public static void navigateToUrl(String url) {
@@ -76,52 +52,27 @@ public class WbDriverManager {
 
 	public static String getCurrentUrl() {
 
-		String url = driver.getCurrentUrl();
-		Log.info("Current url: " + url);
-		return url;
+		return getDriver().getCurrentUrl();
 	}
 
 	public static void waitElement(By by) {
 
-		// By default it will accepts in Seconds
-		WebDriverWait wait = new WebDriverWait(driver, 40);
 
 		// Here we will wait until element is not visible, if element is visible
 		// then it will return web element
 		// or else it will throw exception
-		wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+		getDriver().waits().until(ExpectedConditions.visibilityOfElementLocated(by));
 	}
 
 	public static List<WbElement> findElements(By by) {
 
-		List<WebElement>	webElements	= driver.findElements(by);
+		List<WebElement>	webElements	= getDriver().findElements(by);
 		List<WbElement>		wbElements	= new ArrayList<WbElement>();
 		for (WebElement webElement : webElements) {
 			wbElements.add(new WbElement(webElement, by.toString()));
 		}
 		return wbElements;
 	}
-
-// private static void configDriverPath() {
-//
-// String driverChromeDriver = ".." + File.separatorChar + "lib" +
-// File.separatorChar + "chromedriver.";
-// String driverGeckoDriver = ".." + File.separatorChar + "lib" +
-// File.separatorChar + "geckodriver.";
-// if (System.getProperty("os.name").equals("Linux")) {
-// driverChromeDriver += "linux";
-// driverGeckoDriver += "linux";
-// } else if (System.getProperty("os.name").contains("Windows")) {
-// driverChromeDriver += "exe";
-// driverGeckoDriver += "exe";
-// } else {
-// driverChromeDriver += "mac";
-// driverGeckoDriver += "mac";
-// }
-//
-// System.setProperty("webdriver.chrome.driver", driverChromeDriver);
-// System.setProperty("webdriver.gecko.driver", driverGeckoDriver);
-// }
 
 	public static void backPreviousPage() {
 
@@ -131,13 +82,13 @@ public class WbDriverManager {
 
 	public static void closeCurrentTab() {
 
-		ArrayList<String> tabs = new ArrayList<String>(driver.getWindowHandles());
+		ArrayList<String> tabs = new ArrayList<String>(getDriver().getWindowHandles());
 		// below code will switch to new tab
-		driver.switchTo().window(tabs.get(1));
+		getDriver().switchTo().window(tabs.get(1));
 		// perform whatever actions you want in new tab then close it
-		driver.close();
+		getDriver().close();
 		// Switch back to your original tab
-		driver.switchTo().window(tabs.get(0));
+		getDriver().switchTo().window(tabs.get(0));
 	}
 
 	public static void switchToNewWindow() {
@@ -145,7 +96,7 @@ public class WbDriverManager {
 		Log.info("Navigate to previous page");
 		String currentWindowHandle = getDriver().getWindowHandle();
 		// Get the list of all window handles
-		ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
+		ArrayList<String> windowHandles = new ArrayList<String>(getDriver().getWindowHandles());
 
 		for (String window : windowHandles) {
 			if (window != currentWindowHandle) { getDriver().switchTo().window(window); }
@@ -154,7 +105,7 @@ public class WbDriverManager {
 
 	public static void waitForPageLoad() {
 
-		JavascriptExecutor js = (JavascriptExecutor) driver;
+		JavascriptExecutor js = (JavascriptExecutor) getDriver().driver();
 		// Time out after 6s, check every 1s
 		for (int i = 0; i < 6; i++) {
 			try {
@@ -169,13 +120,11 @@ public class WbDriverManager {
 
 	public static void takeScreenShot(String filePath) {
 
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		File scrFile = ((TakesScreenshot) getDriver().driver()).getScreenshotAs(OutputType.FILE);
 		try {
 			FileUtils.copyFile(scrFile, new File(filePath));
 			Log.info("Copy: " + scrFile.toString() + "\n" + "to: " + filePath);
 			System.setProperty("org.uncommons.reportng.escape-output", "false");
-// Reporter.log("<img src='" + filePath.substring(filePath.indexOf("html/")+5) +
-// "' hight='400' width='400'/>"false);
 			String path = ("<img src=\"" + filePath.substring(filePath.indexOf("html/") + 5)
 					+ "\" alt=\"\"/></img>");
 			Reporter.log(path);

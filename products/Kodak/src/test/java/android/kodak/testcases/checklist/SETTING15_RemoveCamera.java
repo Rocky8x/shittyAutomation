@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import com.cinatic.ApiHelper;
 import com.cinatic.object.Device;
-import com.cinatic.object.MqttObject;
 import com.cinatic.object.Terminal;
 
 import android.kodak.object.PageCameraSetting;
@@ -26,7 +25,6 @@ public class SETTING15_RemoveCamera extends TestBaseAndroid {
 		api.userLogin(c_username, c_password);
 		api.getDevices();
 		device = api.getDeviceByDeviceId(c_deviceid);
-		MqttObject o = api.registerApp();
 		terminal = new Terminal(c_comport);
 	}
 	

@@ -175,4 +175,25 @@ public class FileHelper {
 
 		for (File file : list) { file.delete(); }
 	}
+
+	public static boolean createFolder(String folder) throws Exception {
+
+		Log.info("Create folder", folder, " if not yet existed");
+		File dir = new File(folder);
+		return dir.mkdirs();
+	}
+
+	public static boolean isFileExist(String filePath) {
+
+		File	file	= new File(filePath);
+		boolean	e		= file.exists();
+		if (e) {
+			if (!file.isFile()) {
+				Log.fatal(filePath, "is not a file");
+				return false;
+			}
+		}
+		Log.info(filePath, "is exist?", e + "");
+		return e;
+	}
 }

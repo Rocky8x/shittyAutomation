@@ -6,11 +6,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.cinatic.driver.DriverManager;
-import com.cinatic.driver.DriverSetting;
 import com.cinatic.log.Log;
 
 import ios.kodak.object.PageIOSSetting;
-import mobile.kodak.base.TestBase;
 import mobile.kodak.base.TestBaseIOS;
 
 public class TM000_EnableStreamingInfo extends TestBaseIOS{
@@ -19,13 +17,12 @@ public class TM000_EnableStreamingInfo extends TestBaseIOS{
 	@Override
 	public void beforeMethod(Method method) {
 		Log.info(String.format("---------------------- START: %s ----------------------", method.getName()));
-		String bundleID = "com.apple.Preferences";
-		String kodakBundleId = "com.perimetersafe.kodaksmarthome"; 
+		String appleSettingBundleID = "com.apple.Preferences";
+		String kodakBundleId = driverSetting.getAppId(); 
 
-		driverSetting = (DriverSetting) context.getBean(TestBase.c_platform);
-		driverSetting.setBundleId(bundleID);
+		driverSetting.setAppId(appleSettingBundleID);
 		DriverManager.createWebDriver(driverSetting);
-		driverSetting.setBundleId(kodakBundleId);
+		driverSetting.setAppId(kodakBundleId);
 	}
 	
 	@Test(priority = 0, description = "Enable debug info")

@@ -130,7 +130,7 @@ public class PlayMotionClip extends StressTestBaseAndroid{
 		Log.info("Video play duration: " + durationVideoPlay);
 		Log.info("----------End Information------");
 		
-		db.doInsertVideoData(c_device, streamingStatus, durationVideoPlay, timeClickPlaybutton, TestConstant.appVersion, c_platform, logMessage, fileUrl, c_username + "/" + c_password,
+		db.doInsertVideoData(c_device, streamingStatus, durationVideoPlay, timeClickPlaybutton, TestConstant.appVersion, driverSetting.getDeviceName(), logMessage, fileUrl, c_username + "/" + c_password,
 				"PLAY MOTION CLIP PERFORMANCE");
 
 		resetInfo();

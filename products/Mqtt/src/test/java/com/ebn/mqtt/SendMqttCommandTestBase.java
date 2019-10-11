@@ -26,27 +26,33 @@ public class SendMqttCommandTestBase extends MqttTestBase {
 	@BeforeClass
 	public void prepare() throws Exception {
 
+		// get environment info to write to text file. @formatter:off
+		String textEnvInfo = 
+			StringHelper.getCurrentDateTime() + "\n" + 
+			testEnvInfo.get(4) + "\n" + 
+			device.getDevice_id() + "\n" + 
+			device.getFirmware_version() + "\n" +
+			testEnvInfo.get(3) + " | " + testEnvInfo.get(2) + "\n";
+		Log.info("Test environment: \n", textEnvInfo);
+		// @formatter:on
+		
 		// prepare report folder
-		if (appendPreviousReport) {
-			try {
-				FileHelper.deleteFiles(reportFolder, ".html");
-			} catch (Exception e) {}
-		} else {
+		FileHelper.createFolder(reportFolder);
+		if (Boolean.parseBoolean(testParams.get("cleanReport"))) {
+			Log.info("Cleaning report folder");
 			try {
 				FileHelper.clearFolder(reportFolder);
 			} catch (Exception e) {}
+			testParams.put("cleanReport", "false");
 
-		// get environment info and write to text file. @formatter:off
-			String textEnvInfo = 
-					StringHelper.getCurrentDateTime() + "\n" + 
-					testEnvInfo.get(4) + "\n" + 
-					device.getDevice_id() + "\n" + 
-					device.getFirmware_version() + "\n" +
-					testEnvInfo.get(3) + " | " + testEnvInfo.get(2) + "\n";
-				// @formatter:on
-
-			Log.info("Test environment: \n", textEnvInfo);
 			FileHelper.writeFile(txtMqttCommandSendResult, textEnvInfo);
+		} else {
+			try {
+				FileHelper.deleteFiles(reportFolder, "html");
+			} catch (Exception e) {}
+			if (!FileHelper.isFileExist(txtMqttCommandSendResult)) {
+				FileHelper.writeFile(txtMqttCommandSendResult, textEnvInfo);
+			}
 		}
 	}
 

@@ -26,6 +26,7 @@ public class PAYMENT03_UserFlow extends TestBaseMotoIntl{
 	public String region = "Arizona";
 	public String telephone = "1900135791";
 	public String creditCartNumber = "4111 1111 1111 1111";
+	public String invalidCreditCard = "1234 5678 9966 3698";
 	public String date = "10 - October";
 	public String year = "22";
 	public String securityCode = "123";
@@ -38,6 +39,7 @@ public class PAYMENT03_UserFlow extends TestBaseMotoIntl{
 	public String zipCodeShipping = "700000";
 	public String cityShipping = "city_update";
 	public String regionShipping = "Alabama";
+	public String regionShippingNull = "Please select region, state or province";
 	public String company = "Company_update";
 	
 	List<String> fieldInformationList() {
@@ -48,7 +50,7 @@ public class PAYMENT03_UserFlow extends TestBaseMotoIntl{
 
 	List<String> fieldShippingList() {
 		List<String> field = Arrays.asList("Phone Number", "Address", "Zip/Postal Code",
-				 "City");
+				 "City", "State/Province");
 		return field;
 	}
 
@@ -68,18 +70,12 @@ public class PAYMENT03_UserFlow extends TestBaseMotoIntl{
 		// Go to shipping information page
 		pageCart.clickProceedCheckoutBtn();
 		// input information on shipping information page
-		pageShippingInformation.inputEmailAddress(email);
-		pageShippingInformation.inputFirstName(firstName);
-		pageShippingInformation.inputLastName(lastName);
-		pageShippingInformation.inputAddressStreet1(address1);
-		pageShippingInformation.inputAddressStreet2(address2);
-		pageShippingInformation.inputZipCode(zipCode);
-		pageShippingInformation.inputCity(city);
-		pageShippingInformation.selectRegion(region);
-		pageShippingInformation.inputTelephone(telephone);
+		pageShippingInformation.inputInformationUser(email, firstName, lastName, address1, address2, zipCode, city, region, telephone);
+
 		// Verify navigation to payment page
 		pageShippingInformation.clickContinueBtn();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
 
 		pagePayment.clickContinueBtn();
 		//Check error
@@ -92,18 +88,40 @@ public class PAYMENT03_UserFlow extends TestBaseMotoIntl{
 	}
 	
 	@Test()
-	public void userFlow02_InputValidInformation() throws Exception {
+	public void userFlow02_InputInvalidCreditCard() throws Exception {
+		pageHome.navigateCheckoutPage();
+		
+		// Verify navigation to cart page
+		pageShippingInformation.clickContinueBtn();
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
+
+		pagePayment.clickCreditCardMethod();
+		pagePayment.inputInformationCard(invalidCreditCard, date, year, securityCode);
+
+		// check click Continue, navigate to order confirmation page
+		pagePayment.clickContinueBtn();
+		//Check error
+		String titlePopUp = pagePayment.getTitleErrorMessage();
+		assertEquals(titlePopUp, titleMessageError);
+		List<String> errorField = pagePayment.getListFieldErrorMessage();
+		assertEquals(errorField.size(), 1);
+		String errorFieldExpected = "Credit Card number";
+		assertEquals(errorField.get(0), errorFieldExpected);
+		pagePayment.clickCloseError();
+	}
+	
+	@Test()
+	public void userFlow03_InputValidInformation() throws Exception {
 		pageHome.navigateCheckoutPage();
 	
 		// Verify navigation to cart page
 		pageShippingInformation.clickContinueBtn();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
 		
 		pagePayment.clickCreditCardMethod();
-		pagePayment.inputCardNumber(creditCartNumber);
-		pagePayment.selectDateExpiration(date);
-		pagePayment.selectYearExpiration(year);
-		pagePayment.inputSecurityCode(securityCode);
+		pagePayment.inputInformationCard(creditCartNumber, date, year, securityCode);
 
 		// check click Continue, navigate to order confirmation page
 		pagePayment.clickContinueBtnAndVerify();
@@ -111,59 +129,45 @@ public class PAYMENT03_UserFlow extends TestBaseMotoIntl{
 	}
 	
 	@Test()
-	public void userFlow03_ChangeInformationShipping() throws Exception {
+	public void userFlow04_ChangeInformationShipping() throws Exception {
 		pageHome.navigateCheckoutPage();
 	
 		// Verify navigation to cart page
 		pageShippingInformation.clickContinueBtn();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
 		
 		pagePayment.clickCreditCardMethod();
-		pagePayment.inputCardNumber(creditCartNumber);
-		pagePayment.selectDateExpiration(date);
-		pagePayment.selectYearExpiration(year);
-		pagePayment.inputSecurityCode(securityCode);
+		pagePayment.inputInformationCard(creditCartNumber, date, year, securityCode);
+
 
 		// check click Continue, navigate to order confirmation page
 		pagePayment.clickSameShippingAddressCkb();
 		WbDriverManager.waitForPageLoad();
-		pagePayment.inputFullNameTbx(fullNameShipping);
-		pagePayment.inputPhoneNumberTbx(telephoneShipping);
-		pagePayment.inputCompanyTbx(company);
-		pagePayment.inputAddres1Tbx(address1Shipping);
-		pagePayment.inputAddres2Tbx(address2Shipping);
-		pagePayment.inputZipCodeTbx(zipCode);
-		pagePayment.inputCityTbx(cityShipping);
+		pagePayment.inputInformationShipping(fullNameShipping , telephoneShipping, company, address1Shipping, address2Shipping, zipCode, cityShipping, regionShipping);
 
-		pagePayment.setStateDropBox(regionShipping);
 		// check click Continue, navigate to order confirmation page
 		pagePayment.clickContinueBtnAndVerify();
 
 	}
 	
 	@Test()
-	public void userFlow04_NullInformationShipping() throws Exception {
+	public void userFlow05_NullInformationShipping() throws Exception {
 		pageHome.navigateCheckoutPage();
 	
 		// Verify navigation to cart page
 		pageShippingInformation.clickContinueBtn();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
+		
 		pagePayment.clickCreditCardMethod();
-		pagePayment.inputCardNumber(creditCartNumber);
-		pagePayment.selectDateExpiration(date);
-		pagePayment.selectYearExpiration(year);
-		pagePayment.inputSecurityCode(securityCode);
+		pagePayment.inputInformationCard(creditCartNumber, date, year, securityCode);
+
 
 		// check click Continue, navigate to order confirmation page
 		pagePayment.clickSameShippingAddressCkb();
 		WbDriverManager.waitForPageLoad();
-		pagePayment.inputFullNameTbx("");
-		pagePayment.inputPhoneNumberTbx("");
-		pagePayment.inputCompanyTbx("");
-		pagePayment.inputAddres1Tbx("");
-		pagePayment.inputAddres2Tbx("");
-		pagePayment.inputZipCodeTbx("");
-		pagePayment.inputCityTbx("");
+		pagePayment.inputInformationShipping("" , "", "", "", "", "", "", regionShippingNull);
 		
 		// check click Continue, navigate to order confirmation page
 		pagePayment.clickContinueBtn();
@@ -172,6 +176,43 @@ public class PAYMENT03_UserFlow extends TestBaseMotoIntl{
 		assertEquals(errorField, fieldShippingList());
 		pagePayment.clickCloseError();
 
+	}
+	
+	@Test()
+	public void userFlow07_SelectMethodCreditCard() throws Exception {
+		pageHome.navigateCheckoutPage();
+		
+		// Verify navigation to cart page
+		pageShippingInformation.clickContinueBtn();
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
+
+		//Select CreditCard Method
+		pagePayment.clickCreditCardMethod();
+		pagePayment.inputInformationCard(creditCartNumber, date, year, securityCode);
+
+		// check click Continue, navigate to order confirmation page
+		pagePayment.clickContinueBtnAndVerify();	
+	}
+	
+	@Test()
+	public void userFlow08_SelectMethodPaypal() throws Exception {
+		pageHome.navigateCheckoutPage();
+
+		// Verify navigation to cart page
+		pageShippingInformation.clickContinueBtn();
+//		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
+
+		//Select Paypal Method
+		pagePayment.clickPayPalPaymentMethod();
+		WbDriverManager.waitForPageLoad();
+		pagePayment.clickContinueBtn();
+		WbDriverManager.waitForPageLoad();
+		String error = pageCart.getErrorMessage();
+		String errorExpected = "PayPal gateway has rejected request. A match of the Shipping Address City, State, and Postal Code failed (#10736: Shipping Address Invalid City State Postal Code).";
+		assertEquals(error, errorExpected);
+		
 	}
 
 }

@@ -90,7 +90,13 @@ public class PageShippingInformation extends PageBase {
 	
 	public WbElement getTitleErrorTxt() {
 		String xpath = "//div[@class='modal-ac fade in']/div[@class='modal-ac-header']/h3";
+		WbDriverManager.waitElement(By.xpath(xpath));
 		return new WbElement(By.xpath(xpath),"Title Error");
+	}
+	
+	public WbElement getContentErrorTxt() {
+		String xpath = "//div[@class='modal-ac fade in']/div[@class='modal-ac-body']";
+		return new WbElement(By.xpath(xpath),"Content Error Txt");
 	}
 
 	public void clickLogoIcon() {
@@ -98,26 +104,32 @@ public class PageShippingInformation extends PageBase {
 	}
 
 	public void inputEmailAddress(String email) {
+		getEmailAddressTbx().clear();
 		getEmailAddressTbx().sendKeys(email);
 	}
 
 	public void inputFirstName(String firstname) {
+		getFirstNameTbx().clear();
 		getFirstNameTbx().sendKeys(firstname);
 	}
 
 	public void inputLastName(String lastname) {
+		getLastNameTbx().clear();
 		getLastNameTbx().sendKeys(lastname);
 	}
 
 	public void inputAddressStreet1(String address) {
+		getAddress1Tbx().clear();
 		getAddress1Tbx().sendKeys(address);
 	}
 
 	public void inputAddressStreet2(String address) {
+		getAddress2Tbx().clear();
 		getAddress2Tbx().sendKeys(address);
 	}
 
 	public void inputZipCode(String zipCode) {
+		getZipCodeTbx().clear();
 		getZipCodeTbx().sendKeys(zipCode);
 	}
 
@@ -128,16 +140,32 @@ public class PageShippingInformation extends PageBase {
 	}
 
 	public void inputTelephone(String telephone) {
+		getTelephoneTbx().clickByActionClass();
+//		getTelephoneTbx().clear();
 		getTelephoneTbx().sendKeys(telephone);
 	}
 
 	public void inputCity(String city) {
+		getCityTbx().clear();
 		getCityTbx().sendKeys(city);
+	}
+	
+	public void inputInformationUser(String email, String firstName, String lastName, String address1, String address2, String zipCode, String city, String region, String telephone) {
+		inputEmailAddress(email);
+		inputFirstName(firstName);
+		inputLastName(lastName);
+		inputAddressStreet1(address1);
+		inputAddressStreet2(address2);
+		inputZipCode(zipCode);
+		inputCity(city);
+		selectRegion(region);
+		inputTelephone(telephone);
 	}
 
 	public void clickContinueBtn() {
 		getContinueBtn().click();
-		TimeHelper.sleep(5000);
+//		TimeHelper.sleep(10000);
+		WbDriverManager.waitForPageLoad();
 	}
 
 	public void verifyShippingMethodIsDisplay() {
@@ -149,8 +177,9 @@ public class PageShippingInformation extends PageBase {
 	public void clickContinueBtnAndVerify() {
 		clickContinueBtn();
 		WbDriverManager.waitForPageLoad();
-		TimeHelper.sleep(9000);
+//		TimeHelper.sleep(7000);
 		PagePayment pagePayment = new PagePayment();
+		pagePayment.getContinueBtn().isDisplayed();
 		pagePayment.verifyUrl();
 		WbDriverManager.backPreviousPage();
 	}
@@ -159,12 +188,11 @@ public class PageShippingInformation extends PageBase {
 		clickLogoIcon();
 		WbDriverManager.waitForPageLoad();
 		PageCart pageCart = new PageCart();
+		pageCart.getShoppingCartTitle().isDisplayed();
 		pageCart.verifyUrl();
 		WbDriverManager.backPreviousPage();
 	}
-	
-	
-	
+		
 	public List<String> getListFieldErrorMessage() {
 		List<String> listField = new ArrayList<String>();
 		String xpath = "//div[@class='modal-ac fade in']//ul/li";
@@ -181,6 +209,10 @@ public class PageShippingInformation extends PageBase {
 	
 	public String getTitleErrorMessage() {
 		return getTitleErrorTxt().getText();
+	}
+
+	public String getContentErrorMessage() {
+		return getContentErrorTxt().getText();
 	}
 
 }

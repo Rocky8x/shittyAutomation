@@ -2,7 +2,9 @@ package ios.kodak.testcases.checklist;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import com.cinatic.ApiHelper;
@@ -23,14 +25,37 @@ public class OTA02_OtaDuringSetup extends TestBaseIOS{
 	Terminal terminal;
 	ApiHelper api;
 	Device device;
+	String deviceid1, devicessid1, comport1, wepwifiname, wepwifipassword;
 	
-	@BeforeMethod
-	public void setUp() throws SerialPortException {
-		terminal = new Terminal(c_comport);
+//	@BeforeMethod
+//	public void setUp() throws SerialPortException {
+//		terminal = new Terminal(c_comport);
+//		api = new ApiHelper();
+//		api.userLogin(c_username, c_password);
+//		api.getDevices();
+//		device = api.getDeviceByDeviceId(c_deviceid);
+//	}
+	@Parameters({"deviceid1", "devicessid1", "comport1"})
+	@BeforeClass
+	public void setup(String deviceid1, String devicessid1, String comport1) throws SerialPortException{
+		terminal = new Terminal(comport1);
 		api = new ApiHelper();
 		api.userLogin(c_username, c_password);
 		api.getDevices();
-		device = api.getDeviceByDeviceId(c_deviceid);
+		device = api.getDeviceByDeviceId(deviceid1);
+		this.deviceid1 = deviceid1;
+		this.devicessid1 = devicessid1;
+//		//Check and sign in
+//		PageGetStart.checkAndSignin(c_username, c_password);
+//				
+//		// Open camera setting
+//		PageDashboard.openDeviceSetting(device.getName());
+//				
+//		// Delete camera and verify
+//		PageDeviceSettings.DeleteDevice();
+//		TimeHelper.sleep(10000);
+//		terminal.unlockCameraShell();
+				
 	}
 	
 	
@@ -44,19 +69,25 @@ public class OTA02_OtaDuringSetup extends TestBaseIOS{
 		// Downgrade firmware
 		terminal.sendCommand("sdcard bu_upgrade", "---------- Success ---------", 10);
 		
+		TimeHelper.sleep(7000);
 //		 Check and sign in
 		PageGetStart.checkAndSignin(c_username, c_password);
 		
 		terminal.sendCommand("pair", "start_pairing_mode", 10);
 		PageDashboard.clickAddNewCamera();
-		PageSetup.selectCameraImageByModelName(Device.getModelNameByUuid(c_deviceid));
-		
+		PageSetup.selectCameraImageByModelName(Device.getModelNameByUuid(deviceid1));
+		TimeHelper.sleep(2000);
 		PageSetup.clickProceedAnyway();
+		TimeHelper.sleep(2000);
 		PageSetup.clickOnContinueSettupButton();
+		TimeHelper.sleep(2000);
 		PageSetup.clickOnContinueSettupButton();
+		TimeHelper.sleep(2000);
 		PageSetup.clickGotoSettingsButton();
+		TimeHelper.sleep(2000);
 		PageIOSSetting.clickWifiSettings();
-		PageIOSSetting.clickOnWifiName(c_devicessid);
+		TimeHelper.sleep(2000);
+		PageIOSSetting.clickOnWifiName(devicessid1);
 		TimeHelper.sleep(10000);
 		PageIOSSetting.backToKodakApp();
 		TimeHelper.sleep(10000);

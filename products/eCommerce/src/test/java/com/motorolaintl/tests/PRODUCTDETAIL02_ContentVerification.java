@@ -2,14 +2,27 @@ package com.motorolaintl.tests;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+
+import java.lang.reflect.Method;
 import java.util.List;
+
+import org.testng.ITestContext;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import com.cinatic.log.Log;
 import com.ebn.automation.core.WbDriverManager;
 import com.motorolaintl.pages.PageBase;
 import com.motorolaintl.pages.PageProductDetail;
 
 public class PRODUCTDETAIL02_ContentVerification extends TestBaseMotoIntl {
+	
+	Class<?> pageClass;
+	Object o;
+	PageBase pageBase = new PageBase();
+	PageProductDetail pageProductDetail = new PageProductDetail();
+
 
 	@DataProvider(name = "pageList")
 	public Object[][] createData() {
@@ -22,16 +35,22 @@ public class PRODUCTDETAIL02_ContentVerification extends TestBaseMotoIntl {
 		};
 	}
 
-	PageBase pageBase = new PageBase();
-	PageProductDetail pageProductDetail = new PageProductDetail();
+	@BeforeMethod
+	public void beforeMethod(Object[] pageList, Method method, ITestContext ctx ) throws Exception {
+		if (pageList.length >0){
+			ctx.setAttribute("testName", (String) pageList[0]);
+		}
+		String pageName = (String) pageList[0];
+		Log.info("Navigation test: " + pageName);
+		pageClass = Class.forName(pageName);
+
+		o = pageClass.newInstance();
+		pageClass.getMethod("openPage").invoke(o);
+		WbDriverManager.waitForPageLoad();
+	}
 
 	@Test(dataProvider = "pageList")
 	public void contentVerificationTest(String className) throws Exception {
-
-		Class<?> pageClass = Class.forName(className);
-
-		Object o = pageClass.newInstance();
-		pageClass.getMethod("openPage").invoke(o);
 
 		for (int i = 0; i < pageBase.getProductList().size(); i++) {
 			// Check product is buyable

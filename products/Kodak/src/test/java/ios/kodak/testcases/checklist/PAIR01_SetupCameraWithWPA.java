@@ -5,7 +5,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.cinatic.TimeHelper;
-import com.cinatic.object.Device;
 import com.cinatic.object.Terminal;
 
 import ios.kodak.object.PageBase;
@@ -24,17 +23,21 @@ public class PAIR01_SetupCameraWithWPA extends TestBaseIOS{
 		terminal = new Terminal(c_comport);
 	}
 	
-	@Test(priority = 73, description = "Verify that user can setup camera successful")
+	@Test(priority = 990, description = "Verify that user can setup camera successful")
 	public void setupCameraWithWPARouter() throws SerialPortException{
 		String secureType = "wpa";
 		
 		PageGetStart.checkAndSignin(c_username, c_password);
+		terminal.unlockCameraShell();
+		TimeHelper.sleep(3000);
 		terminal.sendCommand("pair", "start_pairing_mode", 10);
 		PageDashboard.clickAddNewCamera();
-		PageSetup.selectCameraImageByModelName(Device.getModelNameByUuid(c_deviceid));
+		PageSetup.selectCameraImageByModelName("C520");
 		PageSetup.clickProceedAnyway();
+		TimeHelper.sleep(3000);
 		PageSetup.clickOnContinueSettupButton();
-		PageSetup.clickOnContinueSettupButton();
+		TimeHelper.sleep(3000);
+//		PageSetup.clickOnContinueSettupButton();
 		PageSetup.clickGotoSettingsButton();
 		PageIOSSetting.clickWifiSettings();
 		PageIOSSetting.clickOnWifiName(c_devicessid);

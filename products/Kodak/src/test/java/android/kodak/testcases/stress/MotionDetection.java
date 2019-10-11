@@ -82,7 +82,7 @@ public class MotionDetection extends TestBaseAndroid{
 						String fileLog = StringHelper.getStringByString(teratermLog, "clips_md", ".flv", true) + ".flv";
 						teratermLog = "";
 						// Insert data into database
-						db.doInsertMotionDetectionData(device, event_duration, eventTime, c_platform, c_username + "/" + c_password, fileLog, result, null, "MOTION DETECTION PERFORMANCE");
+						db.doInsertMotionDetectionData(device, event_duration, eventTime, driverSetting.getDeviceName(), c_username + "/" + c_password, fileLog, result, null, "MOTION DETECTION PERFORMANCE");
 					}
 				} catch (SerialPortException e) {
 					Log.error(e.getMessage());
@@ -135,7 +135,7 @@ public class MotionDetection extends TestBaseAndroid{
 				result = "PASSED";
 			}
 			
-			db.doInsertMotionDetectionData(device, event_duration, eventTime, c_platform, c_username + "/" + c_password, fileLog, result, detectionTime, "CHECK MOTION DETECTION IN FIRMWARE AND APP");
+			db.doInsertMotionDetectionData(device, event_duration, eventTime, driverSetting.getDeviceName(), c_username + "/" + c_password, fileLog, result, detectionTime, "CHECK MOTION DETECTION IN FIRMWARE AND APP");
 		}
 		terminal.closePort();
 		webHelper.closeBrowser();

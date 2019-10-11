@@ -1,6 +1,5 @@
 package com.motorolaintl.tests;
 
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -9,6 +8,7 @@ import java.util.List;
 import org.testng.annotations.Test;
 
 import com.cinatic.TimeHelper;
+import com.ebn.automation.core.WbDriverManager;
 import com.motorolaintl.pages.PageBase;
 import com.motorolaintl.pages.PageCart;
 import com.motorolaintl.pages.PageHome;
@@ -57,25 +57,15 @@ public class ORDERCONFIRMATION01_ContentVerification extends TestBaseMotoIntl{
 		// Go to shipping information page
 		pageCart.clickProceedCheckoutBtn();
 		// input information on shipping information page
-		pageShippingInformation.inputEmailAddress(email);
-		pageShippingInformation.inputFirstName(firstName);
-		pageShippingInformation.inputLastName(lastName);
-		pageShippingInformation.inputAddressStreet1(address1);
-		pageShippingInformation.inputAddressStreet2(address2);
-		pageShippingInformation.inputZipCode(zipCode);
-		pageShippingInformation.inputCity(city);
-		pageShippingInformation.selectRegion(region);
-		pageShippingInformation.inputTelephone(telephone);
+		pageShippingInformation.inputInformationUser(email, firstName, lastName, address1, address2, zipCode, city, region, telephone);
 		// Verify navigation to payment page
 		pageShippingInformation.clickContinueBtn();
 		
 		pagePayment.clickCreditCardMethod();
-		pagePayment.inputCardNumber(creditCartNumber);
-		pagePayment.selectDateExpiration(date);
-		pagePayment.selectYearExpiration(year);
-		pagePayment.inputSecurityCode(securityCode);
+		pagePayment.inputInformationCard(creditCartNumber, date, year, securityCode);
+		
 		pagePayment.clickContinueBtn();
-		TimeHelper.sleep(5000);
+		WbDriverManager.waitForPageLoad();
 		
 		//verify logo icon is displayed
 		assertTrue(pageOrderConfirmation.getLogoIcon().isDisplayed());

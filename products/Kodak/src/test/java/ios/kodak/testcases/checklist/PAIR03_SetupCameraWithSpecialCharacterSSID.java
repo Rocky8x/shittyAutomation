@@ -28,10 +28,10 @@ public class PAIR03_SetupCameraWithSpecialCharacterSSID extends TestBaseIOS{
 		this.deviceid1 = deviceid1;
 		this.devicessid1 = devicessid1;
 		this.comport1 = comport1;
-		terminal = new Terminal(comport1);
+		terminal = new Terminal(c_comport);
 	}
 	
-	@Test(priority = 75, description = "Verify that user can setup camera with wep router successful")
+	@Test(priority = 992, description = "Verify that user can setup camera with wep router successful")
 	public void setupCameraWithSpecificRouterName() throws SerialPortException{
 		String secureType = "wpa";
 		String wifiName = "`~!@#$%^&*()_-+={}[]|\\:;\"' ?<>,.";
@@ -40,13 +40,16 @@ public class PAIR03_SetupCameraWithSpecialCharacterSSID extends TestBaseIOS{
 		PageGetStart.checkAndSignin(c_username, c_password);
 		terminal.sendCommand("pair", "start_pairing_mode", 10);
 		PageDashboard.clickAddNewCamera();
-		PageSetup.selectCameraImageByModelName(Device.getModelNameByUuid(deviceid1));
+		PageSetup.selectCameraImageByModelName("C520");
 		PageSetup.clickProceedAnyway();
+		TimeHelper.sleep(2000);
 		PageSetup.clickOnContinueSettupButton();
+		TimeHelper.sleep(2000);
 		PageSetup.clickOnContinueSettupButton();
+		TimeHelper.sleep(2000);
 		PageSetup.clickGotoSettingsButton();
 		PageIOSSetting.clickWifiSettings();
-		PageIOSSetting.clickOnWifiName(devicessid1);
+		PageIOSSetting.clickOnWifiName(c_devicessid);
 		TimeHelper.sleep(20000);
 		
 		PageIOSSetting.backToKodakApp();
