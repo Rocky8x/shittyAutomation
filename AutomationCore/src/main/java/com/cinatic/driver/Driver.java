@@ -1,10 +1,13 @@
 package com.cinatic.driver;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+
+import com.cinatic.element.Element;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileDriver;
@@ -34,8 +37,6 @@ public interface Driver extends MobileDriver<WebElement> {
 
 	BufferedImage captureScreenshot(int x, int y, int w, int h);
 
-	void pressKeyCode(int keyCode);	
-
 	WebElement scrollToExact(String text);
 
 	String getAppStrings();
@@ -47,4 +48,6 @@ public interface Driver extends MobileDriver<WebElement> {
 	void swipe(Point p1, Point p2, int wait);
 	void switchRecentApp();
 	void pressKey(AndroidKey keyEvent);
+	public List<Element> findAllElementsBy(By by);
+
 }

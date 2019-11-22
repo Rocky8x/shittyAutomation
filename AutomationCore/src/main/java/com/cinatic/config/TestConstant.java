@@ -5,9 +5,6 @@ import java.io.File;
 import com.cinatic.StringHelper;
 
 public class TestConstant {
-	public static final int longTime = 30;
-	public static final int mediumTime = 15;
-	public static final int shortTime = 5;
 
 	public static enum directioName {
 		Left, Right, Up, Down
