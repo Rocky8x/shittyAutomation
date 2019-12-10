@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,11 +20,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.html5.Location;
 import org.openqa.selenium.remote.Response;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.util.StopWatch;
 
 import com.cinatic.TimeHelper;
-import com.cinatic.element.Element;
 import com.cinatic.log.Log;
 
 import io.appium.java_client.AppiumDriver;
@@ -38,158 +35,146 @@ import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 
 public class DriverBase implements Driver {
-
-	protected AppiumDriver<WebElement>	appiumDriver;
-	private DriverSetting				driverSetting;
+	protected AppiumDriver<WebElement> appiumDriver;
+	private DriverSetting driverSetting;
 
 	@Override
 	public AppiumDriver<WebElement> getAppiumDriver() {
-
 		return appiumDriver;
 	}
 
 	public void setAppiumDriver(AppiumDriver<WebElement> appiumDriver) {
-
 		this.appiumDriver = appiumDriver;
 	}
 
 	@Override
 	public DriverSetting getDriverSetting() {
-
 		return driverSetting;
 	}
 
 	public void setDriverSetting(DriverSetting driverSetting) {
-
 		this.driverSetting = driverSetting;
 	}
 
 	public DriverBase(DriverSetting driverSetting) {
-
 		setDriverSetting(driverSetting);
 	}
 
 	@Override
 	public void get(String url) {
-
 		appiumDriver.get(url);
 	}
 
 	@Override
 	public String getCurrentUrl() {
-
 		logStart("get current url");
 		return appiumDriver.getCurrentUrl();
 	}
 
 	@Override
 	public String getTitle() {
-
 		return appiumDriver.getTitle();
 	}
 
 	@Override
 	public List<WebElement> findElements(By by) {
-
+//		logStart(String.format("find elements: %s", by));
 		List<WebElement> elements = appiumDriver.findElements(by);
 		return elements;
 	}
 
 	@Override
 	public WebElement findElement(By by) {
-
-		try {
-
-			WebElement element = appiumDriver.findElement(by);
-			return element;
-		} catch (Exception e) {
-			return null;
-		}
+//		logStart(String.format("find element: %s", by));
+		WebElement element = appiumDriver.findElement(by);
+		return element;
 	}
 
 	@Override
 	public WebElement findElement(By by, int timeout) {
-
-		WebDriverWait waits = new WebDriverWait(DriverManager.getDriver().getAppiumDriver(),
-				timeout);
-
-		WebElement element = waits.until(ExpectedConditions.presenceOfElementLocated(by));
+//		logStart(String.format("find element: %s", by));
+		WebElement element = null;
+		StopWatch tw = new StopWatch();
+		if (timeout > 0) {
+			try {
+				tw.start();
+				element = appiumDriver.findElement(by);
+			} catch (Exception ex) {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				tw.stop();
+				timeout = (int) (timeout - tw.getTotalTimeSeconds());
+				element = findElement(by, timeout);
+			}
+		}
 		return element;
 	}
 
 	@Override
 	public String getPageSource() {
-
 		logStart("get page source");
 		return appiumDriver.getPageSource();
 	}
 
 	@Override
 	public void close() {
-
 		logStart("close driver");
 		appiumDriver.close();
 	}
 
 	@Override
 	public void quit() {
-
 		logStart("quit driver");
 		appiumDriver.quit();
 	}
 
 	@Override
 	public Set<String> getWindowHandles() {
-
 		logStart("get window handles");
 		return appiumDriver.getWindowHandles();
 	}
 
 	@Override
 	public String getWindowHandle() {
-
 		logStart("get window handle");
 		return appiumDriver.getWindowHandle();
 	}
 
 	@Override
 	public TargetLocator switchTo() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Navigation navigate() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Options manage() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebDriver context(String name) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Set<String> getContextHandles() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getContext() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -203,14 +188,12 @@ public class DriverBase implements Driver {
 	@Override
 	@SuppressWarnings("rawtypes")
 	public TouchAction performTouchAction(TouchAction arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void hideKeyboard() {
-
 		try {
 			logStart("hide keyboard");
 			appiumDriver.hideKeyboard();
@@ -221,21 +204,18 @@ public class DriverBase implements Driver {
 
 	@Override
 	public void tap(int x, int y) {
-
 		logStart(String.format("tap: %s %s", x, y));
 		new TouchAction<>(appiumDriver).tap(PointOption.point(x, y)).perform();
 	}
-
+	
 	@Override
 	public void tap(Point point) {
-
 		logStart(String.format("tap: %s %s", point.x, point.y));
 		new TouchAction<>(appiumDriver).tap(PointOption.point(point.x, point.y)).perform();
 	}
 
 	@Override
 	public BufferedImage captureScreenshot() {
-
 		logStart("capture screenshot");
 		File screen = ((TakesScreenshot) DriverManager.getDriver().getAppiumDriver())
 				.getScreenshotAs(OutputType.FILE);
@@ -249,7 +229,6 @@ public class DriverBase implements Driver {
 
 	@Override
 	public BufferedImage captureScreenshot(int x, int y, int w, int h) {
-
 		logStart(String.format("capture screenshot: %s %s %s %s", x, y, w, h));
 		File screen = ((TakesScreenshot) DriverManager.getDriver().getAppiumDriver())
 				.getScreenshotAs(OutputType.FILE);
@@ -266,7 +245,6 @@ public class DriverBase implements Driver {
 
 	@Override
 	public ScreenOrientation getOrientation() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -279,21 +257,18 @@ public class DriverBase implements Driver {
 
 	@Override
 	public WebElement findElementByAccessibilityId(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsByAccessibilityId(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Location location() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -306,34 +281,27 @@ public class DriverBase implements Driver {
 
 	@Override
 	public void swipe(int tapX1, int tapY1, int tapX2, int tapY2, int i) {
-
 		logStart(String.format("swipe: %s %s %s %s %s", tapX1, tapY1, tapX2, tapY2, i));
 		new TouchAction<>(appiumDriver).press(PointOption.point(tapX1, tapY1))
-				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(i)))
-				.moveTo(PointOption.point(tapX2, tapY2)).release().perform();
+				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(i))).moveTo(PointOption.point(tapX2, tapY2))
+				.release().perform();
 	}
 
 	@Override
 	public void swipe(Point p1, Point p2, int wait) {
-
-		logStart(String.format("swipe Point to Point: %s %s %s", p1.toString(), p2.toString(),
-				wait));
-		new TouchAction<>(appiumDriver).press(PointOption.point(p1.x, p1.y))
-				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
-				.moveTo(PointOption.point(p2.x, p2.y))
+		logStart(String.format("swipe Point to Point: %s %s %s", p1.toString(), p2.toString(), wait));
+		new TouchAction<>(appiumDriver).press(PointOption.point(p1.x, p1.y)).waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000))).moveTo(PointOption.point(p2.x, p2.y))
 				.waitAction(WaitOptions.waitOptions(Duration.ofMillis(wait))).release().perform();
 	}
 
 	@Override
 	public byte[] pullFile(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public byte[] pullFolder(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -352,7 +320,6 @@ public class DriverBase implements Driver {
 
 	@Override
 	public boolean isAppInstalled(String arg0) {
-
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -371,169 +338,145 @@ public class DriverBase implements Driver {
 
 	@Override
 	public String getAppStrings() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getAppStrings(String text) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElementByClassName(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElementByCssSelector(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElementById(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElementByLinkText(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElementByName(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElementByPartialLinkText(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElementByTagName(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElementByXPath(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsByClassName(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsByCssSelector(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsById(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsByLinkText(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsByName(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsByPartialLinkText(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsByTagName(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElementsByXPath(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getDeviceTime() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Map<String, String> getAppStringMap() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Map<String, String> getAppStringMap(String arg0) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Map<String, String> getAppStringMap(String arg0, String arg1) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement scrollTo(String text) {
-
 		return ((AndroidDriver<WebElement>) appiumDriver).findElementByAndroidUIAutomator(
 				"new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\""
 						+ text + "\").instance(0))");
 	}
-
+	
 	@Override
 	public WebElement scrollToId(String id) {
-
 		return ((AndroidDriver<WebElement>) appiumDriver).findElementByAndroidUIAutomator(
 				"new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().resourceIdMatches(\".*id/"
 						+ id + "\").instance(0))");
@@ -541,18 +484,16 @@ public class DriverBase implements Driver {
 
 	@Override
 	public Response execute(String driverCommand, Map<String, ?> parameters) {
-
 		return null;
 	}
 
 	private void logStart(String msg) {
-
 		Log.debug(String.format("- [{%s}]", msg));
 	}
 
-// private void logEnd(String msg) {
-// Log.debug(String.format("+ [{%s}]", msg));
-// }
+//	private void logEnd(String msg) {		
+//		Log.debug(String.format("+ [{%s}]", msg));
+//	}
 
 	@Override
 	public void rotate(DeviceRotation rotation) {
@@ -562,66 +503,45 @@ public class DriverBase implements Driver {
 
 	@Override
 	public DeviceRotation rotation() {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Response execute(String driverCommand) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement findElement(String by, String using) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<WebElement> findElements(String by, String using) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public WebElement scrollToExact(String text) {
-
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void pressKey(AndroidKey keyEvent) {
-
 		logStart(String.format("press key event: %s", keyEvent));
-		((AndroidDriver<WebElement>) appiumDriver).pressKey(new KeyEvent(keyEvent));
+		((AndroidDriver<WebElement>) appiumDriver).pressKey(new KeyEvent(keyEvent));	
 	}
-
+	
 	@Override
 	public void switchRecentApp() {
-
 		pressKey(AndroidKey.APP_SWITCH);
 		TimeHelper.sleep(300);
 		pressKey(AndroidKey.APP_SWITCH);
 
-	}
-
-	public List<Element> findAllElementsBy(By by) {
-
-		List<WebElement>	wElements	= findElements(by);
-		List<Element>		elements	= new ArrayList<Element>();
-
-		for (WebElement webElement : wElements) {
-			Element e = new Element();
-			e.webElement	= webElement;
-			e.by			= by;
-			elements.add(e);
-		}
-		return elements;
 	}
 }

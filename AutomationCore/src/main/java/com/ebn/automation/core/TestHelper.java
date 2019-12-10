@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.testng.ITestContext;
 
-import com.cinatic.TerminalHelper;
 import com.cinatic.log.Log;
 
 public class TestHelper {
@@ -39,16 +38,5 @@ public class TestHelper {
 		Log.info("Parameters:");
 		Set<String> keys = params.keySet();
 		for (String key : keys) { System.out.println("   " + key + " : " + params.get(key)); }
-	}
-	
-	public static void cleanUpAppium() {
-
-		// kill all orphan Appium server
-		try {
-			String pidList = TerminalHelper.exeBashCommand("pgrep node").trim();
-			if (!pidList.isEmpty()) {
-				TerminalHelper.exeBashCommand(String.format("kill %s", pidList.replace("\n", " ")));
-			}
-		} catch (Exception e) {}
 	}
 }

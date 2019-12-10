@@ -70,7 +70,7 @@ public class Terminal {
 
 	public void sendCommand(String command) throws SerialPortException {
 
-//		Log.info(String.format("Sending \'%s\' to \'%s\'", command, serialPort.getPortName()));
+		Log.info(String.format("Sending \'%s\' to \'%s\'", command, serialPort.getPortName()));
 		serialPort.writeString("\r " + command + " \r");
 
 	}

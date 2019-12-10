@@ -23,7 +23,6 @@
 		<module>eCommerce</module>
 		<module>Mqtt</module>
 		<module>Server</module>
-		<module>AirPurifier</module>
 	</modules>
 	<dependencies>
 		<dependency>
