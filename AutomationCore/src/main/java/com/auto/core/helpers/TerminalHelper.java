@@ -73,7 +73,7 @@ public class TerminalHelper {
 
 	public static String sendCommand(String portName, String command, String expectedMessage) {
 
-		return sendCommand(portName, command, expectedMessage,5);
+		return sendCommand(portName, command, expectedMessage, 5);
 	}
 
 	public static String sendCommand(String command, String expectedMessage) {
