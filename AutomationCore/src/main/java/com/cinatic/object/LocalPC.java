@@ -2,7 +2,7 @@ package com.cinatic.object;
 
 import java.io.IOException;
 
-import com.cinatic.TerminalHelper;
+import com.auto.core.helpers.TerminalHelper;
 
 public class LocalPC {
 

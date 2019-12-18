@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="RegessionSuite" verbose="1">
-	<test name="Get device log">
-		<classes>
-			<class name="com.ebn.server.tests.RequestCameraLog"></class>		
-		</classes>
-	</test>
-</suite> 

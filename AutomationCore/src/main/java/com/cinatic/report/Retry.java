@@ -5,7 +5,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
-import com.cinatic.driver.DriverManager;
+import com.auto.core.driver.DriverManager;
 import com.relevantcodes.extentreports.LogStatus;
 
 public class Retry implements IRetryAnalyzer {

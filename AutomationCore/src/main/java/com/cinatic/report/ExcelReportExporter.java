@@ -18,10 +18,10 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
+import com.auto.core.config.TestConstant;
+import com.auto.core.driver.DriverManager;
+import com.auto.core.utils.Log;
 import com.cinatic.StringHelper;
-import com.cinatic.config.TestConstant;
-import com.cinatic.driver.DriverManager;
-import com.cinatic.log.Log;
 
 public class ExcelReportExporter implements ITestListener {
 

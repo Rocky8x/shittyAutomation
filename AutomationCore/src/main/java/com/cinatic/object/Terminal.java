@@ -3,9 +3,9 @@ package com.cinatic.object;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.auto.core.helpers.TimeHelper;
+import com.auto.core.utils.Log;
 import com.cinatic.StringHelper;
-import com.cinatic.TimeHelper;
-import com.cinatic.log.Log;
 
 import jssc.SerialPort;
 import jssc.SerialPortEvent;

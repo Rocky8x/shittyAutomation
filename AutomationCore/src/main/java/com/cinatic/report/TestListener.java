@@ -6,7 +6,7 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import com.cinatic.driver.DriverManager;
+import com.auto.core.driver.DriverManager;
 import com.relevantcodes.extentreports.LogStatus;
 
 public class TestListener implements ITestListener {

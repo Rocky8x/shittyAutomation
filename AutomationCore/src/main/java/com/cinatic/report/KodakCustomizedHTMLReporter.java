@@ -15,9 +15,9 @@ import org.testng.ISuite;
 import org.testng.xml.XmlSuite;
 import org.uncommons.reportng.HTMLReporter;
 
+import com.auto.core.config.TestConstant;
+import com.auto.core.utils.Log;
 import com.cinatic.StringHelper;
-import com.cinatic.config.TestConstant;
-import com.cinatic.log.Log;
 
 public class KodakCustomizedHTMLReporter extends HTMLReporter {
 

@@ -6,8 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.cinatic.TimeHelper;
-import com.cinatic.log.Log;
+import com.auto.core.helpers.TimeHelper;
+import com.auto.core.utils.Log;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;

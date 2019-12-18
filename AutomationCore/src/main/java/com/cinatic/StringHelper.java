@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cinatic.log.Log;
+import com.auto.core.utils.Log;
 
 public class StringHelper {
 
